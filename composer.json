@@ -1,0 +1,8 @@
+{
+    "require": {
+        "phpmailer/phpmailer": "^7.0",
+        "spomky-labs/otphp": "^11.3",
+        "endroid/qr-code": "^5.0",
+        "mpdf/mpdf": "^6.1"
+    }
+}

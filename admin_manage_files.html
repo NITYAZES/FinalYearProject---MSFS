@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File Management - Admin Dashboard</title>
+  <link rel="stylesheet" href="./css/admin_manage_files.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">🔐 Admin Dashboard</div>
+    <div class="navbar-user">
+      <span>Admin User</span>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <div class="page-header-content">
+        <h1>File Management</h1>
+        <p>Monitor and manage encrypted file shares</p>
+      </div>
+   
+      <button class="btn btn-primary" id="backBtn" type="button">← Back to Dashboard</button>
+    </div>
+
+    <div class="alert alert-info">
+      <span style="font-size: 1.2rem">ℹ️</span>
+      <div>
+        <strong>Important:</strong> As an administrator, you can download encrypted files but cannot decrypt them.
+        Only the intended recipient can decrypt files using their private key.
+      </div>
+    </div>
+
+    <div class="content-card">
+      <h2>All Files</h2>
+
+      <div class="search-filter-bar">
+    
+        <input type="text" class="search-input"
+               placeholder="Search files by name, sender, or receiver..."
+               id="fileSearch" />
+
+        <select class="filter-select" id="fileStatusFilter">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="expired">Expired</option>
+          <option value="deleted">Deleted</option>
+        </select>
+
+        <select class="filter-select" id="fileTypeFilter">
+          <option value="">All Types</option>
+          <option value="image">Images</option>
+          <option value="audio">Audio</option>
+          <option value="video">Video</option>
+          <option value="application">Documents</option>
+          <option value="text">Text</option>
+        </select>
+
+        <select class="filter-select" id="fileEncryptionFilter">
+          <option value="">All Encryption</option>
+          <option value="excellent">Excellent (95-100)</option>
+          <option value="good">Good (80-94)</option>
+          <option value="fair">Fair (60-79)</option>
+          <option value="poor">Poor (Below 60)</option>
+        </select>
+      </div>
+
+      <div class="table-container">
+        <table id="filesTable">
+          <thead>
+            <tr>
+              <th>File Name</th>
+              <th>Type</th>
+              <th>Size</th>
+              <th>Sender</th>
+              <th>Receiver</th>
+              <th>Encryption</th>
+              <th>Status</th>
+              <th>Uploaded</th>
+              <th>Expires</th>
+              <th>Downloads</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="filesTableBody">
+            <tr><td colspan="11" class="loading">Loading files...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="fileModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>File Details</h3>
+
+        <button class="modal-close" id="fileModalCloseBtn" type="button">×</button>
+      </div>
+      <div class="modal-body" id="fileModalBody"></div>
+    </div>
+  </div>
+
+  <script src="./js/admin_manage_files.js"></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Files - Secure File Share</title>
+    <link rel="stylesheet" href="./css/my_files.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header Section -->
+      <div class="header-section">
+        <h1>📁 My Files</h1>
+        <p class="subtitle">
+          Manage your uploaded files, expiry, and access controls
+        </p>
+
+        <div class="nav-row">
+          <a href="./dashboard_user.html" class="nav-link">
+            ← Back to Dashboard
+          </a>
+          <a href="./upload.html" class="nav-link"> + Upload New File </a>
+        </div>
+      </div>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <!-- Feedback Messages -->
+        <div id="feedback-message"></div>
+
+  
+
+        <!-- Search and Filters -->
+        <div class="search-filters">
+          <div class="search-bar">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="🔍 Search files by name..."
+            />
+            <button class="clear-filters-btn" id="clear-filters">
+              Clear Filters
+            </button>
+          </div>
+          <div class="filters">
+            <select id="status-filter">
+              <option value="">All Status</option>
+              <option value="active">Active</option>
+              <option value="expired">Expired</option>
+            </select>
+            <select id="sort-by">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="name-az">Name (A-Z)</option>
+              <option value="name-za">Name (Z-A)</option>
+              <option value="size-large">Largest Size</option>
+              <option value="size-small">Smallest Size</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Files Table -->
+        <div class="files-table-container" id="files-container">
+          <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Loading your files...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Extend Expiry Modal -->
+    <div class="modal" id="extend-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-icon">⏰</div>
+          <h2 class="modal-title">Extend Expiry</h2>
+        </div>
+        <div class="modal-body">
+          <p class="modal-text">Set a new expiration date for this file.</p>
+          <div class="modal-input-group">
+            <label class="modal-label" for="new-expiry-date"
+              >New Expiry Date</label
+            >
+            <input
+              type="datetime-local"
+              id="new-expiry-date"
+              class="modal-input"
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn modal-btn-cancel" id="extend-cancel">
+            Cancel
+          </button>
+          <button class="modal-btn modal-btn-confirm" id="extend-confirm">
+            Extend
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="delete-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-icon">🗑️</div>
+          <h2 class="modal-title">Delete File</h2>
+        </div>
+        <div class="modal-body">
+          <p class="modal-text">
+            Are you sure you want to delete this file? This action cannot be
+            undone.
+          </p>
+          <p class="modal-text" style="font-weight: 600; color: #ef4444">
+            File: <span id="delete-file-name"></span>
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn modal-btn-cancel" id="delete-cancel">
+            Cancel
+          </button>
+          <button class="modal-btn modal-btn-delete" id="delete-confirm">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+     <script src="js/my_files.js"></script>
+  </body>
+</html>

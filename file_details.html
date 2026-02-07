@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Details - Secure File Share</title>
+    <link rel="stylesheet" href="./css/file_details.css" />
+  </head>
+  <body>
+    <div class="container details-container">
+      <!-- Header Section -->
+      <div class="header-section">
+        <a href="./my_files.html" class="back-link" style="color: white">
+          ← Back to My Files
+        </a>
+        <h1>📄 File Details</h1>
+        <p class="subtitle">View detailed information about this file</p>
+      </div>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <!-- Feedback Messages -->
+        <div id="feedback-message"></div>
+
+        <!-- Loading State -->
+        <div id="loading-container">
+          <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Loading file details...</p>
+          </div>
+        </div>
+
+        <!-- File Details Content -->
+        <div id="details-content" style="display: none">
+          <!-- File Preview -->
+          <div class="file-preview">
+            <div class="file-icon-large" id="file-icon">📄</div>
+            <h2 id="file-name">File Name</h2>
+          </div>
+
+          <!-- Warning for Expired Files -->
+          <div id="expired-warning" class="alert-warning" style="display: none">
+            <span style="font-size: 24px">⚠️</span>
+            <div>
+              <strong>This file has expired</strong>
+              <p style="margin: 4px 0 0 0; font-size: 14px">
+                The file is no longer available for download.
+              </p>
+            </div>
+          </div>
+
+          <!-- Download Limit Warning -->
+          <div id="limit-warning" class="alert-warning" style="display: none">
+            <span style="font-size: 24px">⚠️</span>
+            <div>
+              <strong>Download limit reached</strong>
+              <p style="margin: 4px 0 0 0; font-size: 14px">
+                Maximum number of downloads exceeded.
+              </p>
+            </div>
+          </div>
+
+          <!-- File Information -->
+          <div class="detail-section">
+            <h3 style="margin-bottom: 20px; color: #1a1a1a">
+              📋 File Information
+            </h3>
+            <div class="detail-row">
+              <span class="detail-label">File Name</span>
+              <span class="detail-value" id="detail-name">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">File Size</span>
+              <span class="detail-value" id="detail-size">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">File Type</span>
+              <span class="detail-value" id="detail-type">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Status</span>
+              <span class="detail-value" id="detail-status">-</span>
+            </div>
+          </div>
+
+          <!-- Sharing Information -->
+          <div class="detail-section">
+            <h3 style="margin-bottom: 20px; color: #1a1a1a">
+              👥 Sharing Information
+            </h3>
+            <div class="detail-row">
+              <span class="detail-label">Sent By</span>
+              <span class="detail-value" id="detail-sender">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Sent To</span>
+              <span class="detail-value" id="detail-receiver">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Uploaded</span>
+              <span class="detail-value" id="detail-uploaded">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Expires</span>
+              <span class="detail-value" id="detail-expires">-</span>
+            </div>
+          </div>
+
+          <!-- Download Information -->
+          <div class="detail-section">
+            <h3 style="margin-bottom: 20px; color: #1a1a1a">
+              📥 Download Information
+            </h3>
+            <div class="detail-row">
+              <span class="detail-label">Downloads</span>
+              <span class="detail-value" id="detail-downloads">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Download Progress</span>
+              <div
+                class="detail-value"
+                style="flex-direction: column; align-items: flex-start"
+              >
+                <span id="download-progress-text">0%</span>
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    id="download-progress-bar"
+                    style="width: 0%"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Encryption Information -->
+          <div
+            class="detail-section"
+            id="encryption-section"
+            style="display: none"
+          >
+            <h3 style="margin-bottom: 20px; color: #1a1a1a">
+              🔒 Encryption Information
+            </h3>
+            <div class="detail-row">
+              <span class="detail-label">Encryption Score</span>
+              <span class="detail-value" id="detail-encryption-score">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Encryption Rating</span>
+              <span class="detail-value" id="detail-encryption-rating">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Encryption Time</span>
+              <span class="detail-value" id="detail-encryption-time">-</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div style="text-align: center; margin-top: 32px">
+            <button
+              class="download-btn"
+              id="download-btn"
+              onclick="downloadFile()"
+            >
+              ⬇️ Download File
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     <script src="js/file_details.js"></script>
+  </body>
+</html>

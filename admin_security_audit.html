@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security Audit - Admin Dashboard</title>
+    <link rel="stylesheet" href="./css/admin_security_audit.css" />
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">🔐 Admin Dashboard</div>
+        <div class="navbar-user">
+            <span id="navUsername">Admin User</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <div class="page-header-content">
+                <h1>Security Audit Log</h1>
+                <p>Monitor all security events and system activities</p>
+            </div>
+           
+            <button class="btn btn-primary" id="backBtn" type="button">← Back to Dashboard</button>
+        </div>
+
+        <div class="content-card">
+            <div class="compliance-header">
+                <h2>Compliance & Reporting</h2>
+                <div class="export-buttons">
+                
+                    <button class="btn-export" id="exportCsvBtn" type="button">📊 Export as CSV</button>
+                </div>
+            </div>
+            <p style="color: #7f8c8d; margin-top: 0.5rem; font-size: 0.875rem;">
+                Export audit logs for compliance reporting, security analysis, or record keeping.
+                CSV format is ideal for data analysis.
+            </p>
+        </div>
+
+        <div class="content-card">
+            <h2>Audit Log</h2>
+
+            <div class="search-filter-bar">
+          
+                <input
+                    type="text"
+                    class="search-input"
+                    placeholder="Search by name, description, or event type..."
+                    id="auditSearch"
+                />
+
+                <select class="filter-select" id="auditCategoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="auth">Authentication</option>
+                    <option value="crypto">Cryptography</option>
+                    <option value="file">File Operations</option>
+                    <option value="admin">Admin Actions</option>
+                    <option value="security">Security</option>
+                </select>
+
+                <select class="filter-select" id="auditSeverityFilter">
+                    <option value="">All Severity</option>
+                    <option value="info">Info</option>
+                    <option value="warning">Warning</option>
+                    <option value="error">Error</option>
+                    <option value="critical">Critical</option>
+                </select>
+
+                <select class="filter-select" id="auditTimeFilter">
+                    <option value="">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">Last 7 Days</option>
+                    <option value="month">Last 30 Days</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table id="auditTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Timestamp</th>
+                            <th>User</th>
+                            <th>Event Type</th>
+                            <th>Category</th>
+                            <th>Severity</th>
+                            <th>Description</th>
+                            <th>User Agent</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auditTableBody">
+                        <tr>
+                            <td colspan="8" class="loading">Loading audit logs...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="logModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Log Details</h3>
+                
+                <button class="modal-close" id="logModalCloseBtn" type="button">×</button>
+            </div>
+            <div id="userModalBody" class="log-details"></div>
+        </div>
+    </div>
+
+    <script src="./js/admin_security_audit.js"></script>
+</body>
+</html>

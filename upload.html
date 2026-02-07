@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Encrypted File - Secure File Share</title>
+   <link rel="stylesheet" href="./css/upload.css?" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-section">
+        <h1>🔒 Upload Encrypted File</h1>
+        <p class="subtitle">Send files securely with end-to-end encryption</p>
+        <div class="nav-row">
+          <a href="./dashboard_user.html" class="nav-link">
+            ← Back to Dashboard
+          </a>
+        </div>
+      </div>
+
+      <!-- Error & success messages -->
+      <div id="errorMessage">
+        <span id="errorText"></span>
+      </div>
+      <div id="successMessage"></div>
+
+      <!-- Upload Form -->
+      <form id="uploadForm" novalidate>
+        <!-- Receiver selector -->
+        <div class="form-group">
+          <label for="receiverUsername">
+            Recipient <span class="required">*</span>
+          </label>
+          <select id="receiverUsername">
+            <option value="">-- Select recipients --</option>
+          </select>
+          <div id="emailDisplay" class="email-display">
+            <!-- Recipients will be added here dynamically -->
+          </div>
+        </div>
+
+        <!-- File upload area -->
+        <div class="form-group">
+          <label for="fileInput">
+            Select File <span class="required">*</span>
+          </label>
+          <div id="fileUploadArea" class="file-upload-area">
+            <input type="file" id="fileInput" />
+            <div class="upload-icon">📁</div>
+            <div class="hint">Click to select file or drag & drop</div>
+            <div class="subhint">Maximum size: 100MB</div>
+          </div>
+
+          <div id="fileInfo" class="file-info">
+            <div class="file-meta">
+              <div class="file-icon">📄</div>
+              <div class="file-text">
+                <div id="fileName">No file selected</div>
+                <div id="fileSize">0 MB</div>
+                <div id="fileType" class="file-type"></div>
+              </div>
+            </div>
+            <button type="button" id="removeFile" class="remove-file-btn">
+              ✕ Remove
+            </button>
+          </div>
+        </div>
+
+        <!-- Policy settings -->
+        <div class="row">
+          <div class="form-group">
+            <label for="expiryTime">
+              Expiry Date & Time <span class="required">*</span>
+            </label>
+            <input
+              type="datetime-local"
+              id="expiryTime"
+              required
+            />
+            <div class="input-hint">When the file should expire</div>
+          </div>
+
+          <div class="form-group">
+            <label for="maxDecryptCount">
+              Max Downloads <span class="required">*</span>
+            </label>
+            <input
+              type="number"
+              id="maxDecryptCount"
+              value="5"
+              min="1"
+              max="100"
+              required
+            />
+            <div class="input-hint">Maximum download attempts (1-100)</div>
+          </div>
+        </div>
+
+        <!-- Progress container -->
+        <div id="progressContainer">
+          <div class="progress-title">🔄 Encryption & Upload Progress</div>
+          <div class="progress-steps">
+            <div id="step1" class="progress-step">
+              <span>Loading encryption keys...</span>
+            </div>
+            <div id="step2" class="progress-step">
+              <span>Encrypting file...</span>
+            </div>
+            <div id="step3" class="progress-step">
+              <span>Processing recipients...</span>
+            </div>
+            <div id="step4" class="progress-step">
+              <span>Finalizing encryption...</span>
+            </div>
+            <div id="step5" class="progress-step">
+              <span>Uploading encrypted file...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" class="upload-btn" id="encryptBtn" disabled>
+          🚀 Encrypt & Upload File
+        </button>
+      </form>
+
+    
+    </div>
+
+    <script src="js/upload.js"></script>
+  </body>
+</html>

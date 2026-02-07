@@ -1,0 +1,866 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 14px;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  background: #f8fafc;
+  min-height: 100vh;
+  color: #1a1a1a;
+  padding: 18px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.12);
+  padding: 0;
+  max-width: 820px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.header-section {
+  background: linear-gradient(135deg, #1f2933 0%, #312e81 100%);
+  padding: 24px 32px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.header-section::before {
+  content: "";
+  position: absolute;
+  top: -60%;
+  right: -18%;
+  width: 220px;
+  height: 220px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  filter: blur(60px);
+}
+
+.header-section h1 {
+  font-size: 26px;
+  margin-bottom: 6px;
+  font-weight: 760;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  letter-spacing: -0.2px;
+}
+
+.subtitle {
+  font-size: 14px;
+  opacity: 0.95;
+  font-weight: 450;
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  line-height: 1.5;
+}
+
+.nav-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 650;
+  background: rgba(255, 255, 255, 0.14);
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-link:active {
+  transform: translateY(0);
+}
+
+#uploadForm,
+#errorMessage,
+#successMessage,
+.security-note {
+  padding: 0 32px;
+}
+
+#uploadForm {
+  padding-top: 18px;
+  padding-bottom: 20px;
+}
+
+#errorMessage,
+#successMessage {
+  margin-top: 12px;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: #2b2b2b;
+  font-weight: 650;
+  font-size: 13px;
+}
+
+label .required {
+  color: #e74c3c;
+}
+
+select,
+input[type="email"],
+input[type="number"],
+input[type="file"] {
+  width: 80%;
+  padding: 10px 12px;
+  border: 2px solid #e6e6e6;
+  border-radius: 10px;
+  font-size: 13px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #fff;
+  color: #1a1a1a;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.16);
+}
+
+.email-display {
+  display: none;
+  margin-top: 10px;
+  padding: 11px 14px;
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f3ff 100%);
+  border-radius: 10px;
+  border: 1px solid #e0e0ff;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
+  font-size: 12.5px;
+  color: #3b3b3b;
+}
+
+.email-display.active {
+  display: block;
+}
+
+.email-display::before {
+  content: "📧 Selected Recipients:";
+  display: block;
+  font-weight: 800;
+  color: #667eea;
+  margin-bottom: 7px;
+  font-size: 12.5px;
+}
+
+.file-upload-area {
+  position: relative;
+  border: 2px dashed #e2e2e2;
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+  transition: all 0.25s;
+  cursor: pointer;
+  background: #fbfbfd;
+}
+
+.file-upload-area:hover {
+  border-color: #667eea;
+  background: #f8f9ff;
+}
+
+.file-upload-area.dragover {
+  border-color: #667eea;
+  background: #f0f3ff;
+  transform: scale(1.01);
+}
+
+.file-upload-area input[type="file"] {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
+
+.file-upload-area .upload-icon {
+  font-size: 34px;
+  margin-bottom: 6px;
+}
+
+.file-upload-area .hint {
+  font-size: 13px;
+  color: #444;
+  font-weight: 650;
+}
+
+.file-upload-area .subhint {
+  margin-top: 4px;
+  font-size: 11.5px;
+  color: #7a7a7a;
+}
+
+.file-info {
+  display: none;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f8f9ff;
+  border: 1px solid #e8e8ff;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.file-info.active {
+  display: flex;
+}
+
+.file-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.file-icon {
+  font-size: 26px;
+}
+
+.file-text {
+  font-size: 12.5px;
+  color: #3d3d3d;
+}
+
+.file-text div {
+  line-height: 1.45;
+}
+
+.file-type {
+  font-size: 11.5px;
+  color: #777;
+  font-style: italic;
+}
+
+#fileName {
+  font-weight: 800;
+  color: #222;
+}
+
+#fileSize {
+  font-size: 11.5px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.remove-file-btn {
+  border: none;
+  background: #ffecec;
+  color: #b52b2b;
+  padding: 7px 10px;
+  border-radius: 10px;
+  font-size: 11.5px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.remove-file-btn:hover {
+  background: #ffdede;
+}
+
+.remove-file-btn:active {
+  transform: scale(0.98);
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+.row .form-group {
+  flex: 1;
+  min-width: 0; /* Allow flex items to shrink below content size */
+}
+
+.row .form-group label {
+  font-size: 12.5px;
+}
+
+.row .form-group .input-hint {
+  font-size: 10.5px;
+}
+
+.input-hint {
+  font-size: 11.5px;
+  color: #7c7c7c;
+  margin-top: 5px;
+  line-height: 1.4;
+}
+
+.upload-btn {
+  width: 100%;
+  padding: 11px;
+  background: linear-gradient(135deg, #1f2933 0%, #312e81 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(49, 46, 129, 0.24);
+}
+
+.upload-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.upload-btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.upload-btn:hover:not(:disabled)::before {
+  width: 260px;
+  height: 260px;
+}
+
+.upload-btn[data-recipient-count]::after {
+  content: attr(data-recipient-count);
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  background: #fff;
+  color: #667eea;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11.5px;
+  font-weight: 850;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+
+#progressContainer {
+  display: none;
+  margin: 14px 0;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f8f9ff;
+  border-left: 4px solid #667eea;
+}
+
+#progressContainer.active {
+  display: block;
+}
+
+.progress-title {
+  font-size: 13px;
+  font-weight: 850;
+  color: #3b3b3b;
+  margin-bottom: 8px;
+}
+
+.progress-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress-step {
+  font-size: 12.5px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #e9ebff;
+  color: #4a4a4a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-step span {
+  flex: 1;
+}
+
+.progress-step::before {
+  content: "⏳";
+  font-size: 15px;
+}
+
+.progress-step.active {
+  background: #d7e0ff;
+  font-weight: 700;
+}
+
+.progress-step.completed {
+  background: #e4f8ea;
+  color: #2c7a3f;
+}
+
+.progress-step.completed::before {
+  content: "✓";
+}
+
+.progress-step.error {
+  background: #fee;
+  color: #c33;
+}
+
+.progress-step.error::before {
+  content: "⚠";
+}
+
+.progress-step.processing-recipient {
+  background: linear-gradient(90deg, #d7e0ff 0%, #e9ebff 50%, #d7e0ff 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+#errorMessage,
+#successMessage {
+  display: none;
+  padding: 11px 14px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+#errorMessage.active {
+  display: block;
+  background: #fee;
+  color: #c33;
+  border-left: 4px solid #c33;
+}
+
+#successMessage.active {
+  display: block;
+  background: #e6ffef;
+  color: #2c7a3f;
+  border-left: 4px solid #2c7a3f;
+}
+
+#errorText {
+  display: inline;
+}
+
+.security-note {
+  background: #f8f9ff;
+  border-left: 4px solid #667eea;
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 12px;
+}
+
+.security-note h3 {
+  color: #667eea;
+  margin-bottom: 6px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 900;
+}
+
+.security-note p {
+  color: #666;
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+
+.security-note ul {
+  margin: 9px 0 0 16px;
+  color: #666;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.security-note ul li {
+  margin: 5px 0;
+}
+
+.recipients-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.recipient-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: #fff;
+  padding: 6px 11px;
+  border-radius: 20px;
+  font-size: 12.5px;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.26);
+  animation: chipSlideIn 0.25s ease;
+}
+
+@keyframes chipSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.chip-name {
+  font-weight: 850;
+}
+
+.chip-email {
+  opacity: 0.9;
+  font-size: 11.5px;
+  padding-left: 8px;
+  border-left: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.chip-remove {
+  background: rgba(255, 255, 255, 0.18);
+  border: none;
+  color: #fff;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+  transition: transform 0.15s, background 0.15s;
+  margin-left: 4px;
+}
+
+.chip-remove:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: scale(1.08);
+}
+
+.chip-remove:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
+  body {
+    padding: 14px 12px;
+  }
+
+  .header-section {
+    padding: 22px 18px;
+  }
+
+  .header-section h1 {
+    font-size: 23px;
+  }
+
+  #uploadForm,
+  #errorMessage,
+  #successMessage,
+  .security-note {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .nav-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav-link {
+    justify-content: center;
+  }
+
+  .row {
+    gap: 8px; /* Reduce gap even more on tablet */
+  }
+  
+  .row input[type="datetime-local"],
+  .row input[type="number"] {
+    font-size: 10.5px;
+    padding: 7px 5px;
+    width: 92%; /* Make them narrower */
+    height: 36px; /* Same fixed height */
+    line-height: 1.4;
+  }
+  
+  .row .form-group label {
+    font-size: 11.5px;
+  }
+
+  .recipient-chip {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .chip-email {
+    display: none;
+  }
+}
+
+/* iPad specific - portrait and landscape */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .row {
+    gap: 10px;
+  }
+  
+  .row input[type="datetime-local"],
+  .row input[type="number"] {
+    font-size: 11px;
+    padding: 8px 6px;
+    width: 90%;
+    height: 38px; /* Same fixed height */
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Stack the row on smaller screens */
+  .row {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .row input[type="datetime-local"],
+  .row input[type="number"] {
+    font-size: 13px;
+    padding: 10px 12px;
+    height: 42px; /* Same fixed height */
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 12px;
+  }
+
+  .header-section {
+    padding: 20px 16px;
+  }
+
+  .header-section h1 {
+    font-size: 21px;
+  }
+
+  #uploadForm,
+  #errorMessage,
+  #successMessage,
+  .security-note {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .recipient-chip {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .chip-email {
+    display: inline;
+  }
+}
+select,
+input[type="email"],
+input[type="number"],
+input[type="file"],
+input[type="datetime-local"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e6e6e6;
+  border-radius: 10px;
+  font-size: 13px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #fff;
+  color: #1a1a1a;
+  font-family: inherit;
+}
+
+/* Shorter width for date/time and number inputs in row layout */
+.row input[type="datetime-local"],
+.row input[type="number"] {
+  font-size: 11.5px;
+  padding: 8px 8px;
+  width: 95%; /* Use percentage instead of max-width for better control */
+  height: 38px; /* Fixed height to ensure both fields are same height */
+  line-height: 1.4;
+}
+
+/* Make datetime picker components more compact */
+.row input[type="datetime-local"]::-webkit-datetime-edit-text {
+  padding: 0 1px;
+}
+
+.row input[type="datetime-local"]::-webkit-datetime-edit-month-field,
+.row input[type="datetime-local"]::-webkit-datetime-edit-day-field,
+.row input[type="datetime-local"]::-webkit-datetime-edit-year-field,
+.row input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
+.row input[type="datetime-local"]::-webkit-datetime-edit-minute-field,
+.row input[type="datetime-local"]::-webkit-datetime-edit-ampm-field {
+  padding: 1px;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.16);
+}
+
+/* Enhanced datetime-local picker styling */
+input[type="datetime-local"] {
+  cursor: pointer;
+  position: relative;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+/* Style for the date/time value display */
+input[type="datetime-local"]::-webkit-datetime-edit {
+  padding: 0;
+}
+
+input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+
+input[type="datetime-local"]::-webkit-datetime-edit-text {
+  color: #666;
+  padding: 0 2px;
+}
+
+input[type="datetime-local"]::-webkit-datetime-edit-month-field,
+input[type="datetime-local"]::-webkit-datetime-edit-day-field,
+input[type="datetime-local"]::-webkit-datetime-edit-year-field,
+input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
+input[type="datetime-local"]::-webkit-datetime-edit-minute-field,
+input[type="datetime-local"]::-webkit-datetime-edit-ampm-field {
+  color: #1a1a1a;
+  font-weight: 600;
+  padding: 2px;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+input[type="datetime-local"]::-webkit-datetime-edit-month-field:focus,
+input[type="datetime-local"]::-webkit-datetime-edit-day-field:focus,
+input[type="datetime-local"]::-webkit-datetime-edit-year-field:focus,
+input[type="datetime-local"]::-webkit-datetime-edit-hour-field:focus,
+input[type="datetime-local"]::-webkit-datetime-edit-minute-field:focus,
+input[type="datetime-local"]::-webkit-datetime-edit-ampm-field:focus {
+  background: rgba(102, 126, 234, 0.15);
+  color: #667eea;
+  outline: none;
+}
+
+/* Firefox datetime styling */
+input[type="datetime-local"]::-moz-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+/* Invalid state styling */
+input[type="datetime-local"]:invalid {
+  border-color: #e74c3c;
+}
+
+input[type="datetime-local"]:invalid:focus {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.16);
+}
+
+/* Additional responsive adjustments for very small screens */
+@media (max-width: 480px) {
+  .row input[type="datetime-local"],
+  .row input[type="number"] {
+    font-size: 13px;
+    padding: 10px 12px;
+    height: 42px; /* Same fixed height */
+    line-height: 1.4;
+  }
+}

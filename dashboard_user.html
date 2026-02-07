@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Multimedia Secure File Share</title>
+    <link rel="stylesheet" href="./css/dashboard_user.css" />
+  </head>
+  <body>
+    <div id="loading" class="loading">Loading...</div>
+
+    <div id="main-app" style="display: none">
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Top Bar -->
+        <header class="top-bar">
+          <!-- LEFT: User Info -->
+          <div class="user-info">
+            <div class="user-avatar" id="user-avatar">U</div>
+            <div class="user-text">
+              <span class="user-name" id="user-name">User</span>
+            </div>
+          </div>
+
+          <!-- RIGHT: Actions -->
+          <div class="top-actions">
+            <div style="position: relative">
+              <button
+                class="icon-btn"
+                id="settings-btn"
+                title="Change Password"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="7.5" cy="15.5" r="5.5"></circle>
+                  <path d="M21 2l-9.6 9.6"></path>
+                  <path d="M15.5 7.5L19 11"></path>
+                </svg>
+              </button>
+
+              <div class="settings-dropdown" id="settings-dropdown">
+                <a href="change_password.html">🔒 Change Password</a>
+              </div>
+            </div>
+            <button class="icon-btn" title="Notifications">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2z" />
+                <path d="M18 16v-5a6 6 0 1 0-12 0v5l-2 2v1h18v-1l-2-2z" />
+              </svg>
+            </button>
+
+            <button class="icon-btn logout-btn" id="logout-btn" title="Logout">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <div class="content">
+          <div class="welcome-section">
+            <h1 class="welcome-title">
+              Welcome back, <span id="user-first-name">User</span>! 👋
+            </h1>
+            <p class="welcome-subtitle">
+              Here's what's happening with your files today
+            </p>
+          </div>
+
+          <!-- Actions Section -->
+          <div class="actions-section">
+            <div class="actions-grid">
+              <div class="action-card" data-action="upload">
+                <div class="action-icon">📤</div>
+                <div class="action-title">Upload Files</div>
+                <p class="action-description">
+                  Share videos, audio, images and documents with advanced
+                  encryption
+                </p>
+              </div>
+
+              <div class="action-card" data-action="download">
+                <div class="action-icon">📥</div>
+                <div class="action-title">Download Files</div>
+                <p class="action-description">
+                  Access and download your securely stored files
+                </p>
+              </div>
+
+              <div class="action-card" data-action="shared-files">
+                <div class="action-icon">🔗</div>
+                <div class="action-title">Shared Files</div>
+                <p class="action-description">
+                  View files you have shared and manage permissions
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="./js/dashboard_user.js"></script>
+    <script src="./js/notifications.js"></script>
+  </body>
+</html>

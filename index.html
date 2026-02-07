@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Multimedia Secure File Share</title>
+    <link rel="stylesheet" href="./css/index.css" />
+  </head>
+  <body>
+    <div
+      class="container"
+      id="login-register-container"
+      role="main"
+      aria-label="SecureFileShare Login and Registration Form"
+    >
+      <div
+        id="feedback-message"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      ></div>
+
+      <div class="title-wrapper">
+        <div class="brand-logo"></div>
+        <h2 id="form-title">Multimedia Secure File Share</h2>
+        <p class="subtitle">Your multimedia sharing portal</p>
+      </div>
+
+      <div
+        class="media-indicators"
+        aria-hidden="true"
+        title="Supported media types"
+      >
+        <div class="media-icon">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M17 10.5V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3.5l4 4v-11l-4 4z"
+            />
+          </svg>
+        </div>
+        <div class="media-icon">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M9 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm8-10v10a4 4 0 1 1-2-3.465V7h2z"
+            />
+          </svg>
+        </div>
+        <div class="media-icon">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM7 14l3-4 2 3 3-4 4 6H7z"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <form id="auth-form" novalidate>
+        <div class="input-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter your username"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <div class="password-wrapper">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+              minlength="12"
+              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{12,}$"
+              title="Must be at least 12 characters and include upper/lowercase, number, and symbol"
+            />
+            <button
+              type="button"
+              class="toggle-password"
+              id="toggle-password-btn"
+              title="Show/Hide Password"
+            >
+              <!-- Eye Closed (hidden password) -->
+              <svg
+                class="eye-closed"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.543-7a9.956 9.956 0 012.09-3.352m3.86-2.385A9.956 9.956 0 0112 5c4.477 0 8.268 2.943 9.543 7a9.956 9.956 0 01-2.09 3.352M15 12a3 3 0 11-6 0 3 3 0 016 0zM3 3l18 18"
+                />
+              </svg>
+
+              <!-- Eye Open (visible password) -->
+              <svg
+                class="eye-open"
+                style="display: none"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+                <circle cx="12" cy="12" r="3" stroke-width="2" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" aria-live="polite">
+          <span id="submit-text">Sign In</span>
+        </button>
+      </form>
+
+      <div class="toggle-link" role="button" tabindex="0" aria-pressed="true">
+        Don't have an account?
+        <strong><a href="register.html">Create one</a></strong>
+      </div>
+
+      <a href="./forgot_password.html" class="forgot-link">
+        Forgot password?
+      </a>
+
+  
+ <div class="back-link">
+                <a href="./homepage.html">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12"/>
+                        <polyline points="12 19 5 12 12 5"/>
+                    </svg>
+                    Back to Home
+                </a>
+            </div>
+   
+      </div>
+    </div>
+
+    <script src="./js/index.js" defer></script>
+  </body>
+</html>

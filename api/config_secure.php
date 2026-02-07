@@ -1,0 +1,3 @@
+<?php
+
+define('TOTP_MASTER_KEY', 'Kx7vZ2mN9pQ1wR4tY6uI8oP0aS2dF5gH7jK9lM3nB6v=');

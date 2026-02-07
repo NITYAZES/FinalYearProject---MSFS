@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Admin Dashboard</title>
+    <link rel="stylesheet" href="./css/admin_manage_users.css" />
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">🔐 Admin Dashboard</div>
+        <div class="navbar-user">
+            <span>Admin User</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <div class="page-header-content">
+                <h1>User Management</h1>
+                <p>View, edit, and manage user accounts</p>
+            </div>
+          
+            <button class="btn btn-primary" id="backBtn" type="button">← Back to Dashboard</button>
+        </div>
+
+        <div class="content-card">
+            <h2>All Users</h2>
+
+            <div class="search-filter-bar">
+             
+                <input
+                    type="text"
+                    class="search-input"
+                    placeholder="Search by name, email, or username..."
+                    id="userSearch"
+                >
+
+              
+                <select class="filter-select" id="userStatusFilter">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="suspended">Suspended</option>
+                </select>
+
+                <select class="filter-select" id="userRoleFilter">
+                    <option value="">All Roles</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                </select>
+
+                <select class="filter-select" id="user2FAFilter">
+                    <option value="">All 2FA Status</option>
+                    <option value="enabled">2FA Enabled</option>
+                    <option value="disabled">2FA Disabled</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Full Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>2FA</th>
+                            <th>Email Verified</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="11" class="loading">Loading users...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">User Details</h3>
+             
+                <button class="modal-close" id="userModalCloseBtn" type="button">×</button>
+            </div>
+            <div id="userModalBody" class="modal-body">
+    
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/admin_manage_users.js"></script>
+</body>
+</html>

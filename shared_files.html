@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shared Files - Secure File Share</title>
+    <link rel="stylesheet" href="./css/shared_files.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-section">
+        <h1>🔗 Shared Files</h1>
+        <p class="subtitle">
+          Manage files you've shared and control recipient access
+        </p>
+
+        <div class="nav-row">
+          <a href="./dashboard_user.html" class="nav-link">
+            ← Back to Dashboard
+          </a>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <div id="feedback-message"></div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="total-shared">0</div>
+            <div class="stat-label">Files Shared</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="total-recipients">0</div>
+            <div class="stat-label">Total Recipients</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="total-views">0</div>
+            <div class="stat-label">Total Downloads</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="active-shares">0</div>
+            <div class="stat-label">Active Shares</div>
+          </div>
+        </div>
+
+        <div class="search-filters">
+          <div class="search-bar">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="🔍 Search shared files..."
+            />
+            <button class="clear-filters-btn" id="clear-filters">
+              Clear Filters
+            </button>
+          </div>
+          <div class="filters">
+            <select id="status-filter">
+              <option value="all">All Files</option>
+              <option value="active">Active Only</option>
+              <option value="expired">Expired</option>
+              <option value="revoked">Revoked</option>
+            </select>
+            <select id="sort-by">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="most-recipients">Most Recipients</option>
+              <option value="name-asc">Name A-Z</option>
+              <option value="name-desc">Name Z-A</option>
+              <option value="size-asc">Size (Small)</option>
+              <option value="size-desc">Size (Large)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="shared-files-container" id="shared-files-container">
+          <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Loading shared files...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Policy Modal -->
+    <div class="modal" id="edit-policy-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-icon">✏️</div>
+          <h2 class="modal-title">Edit File Policy</h2>
+        </div>
+        <div class="modal-body">
+          <p class="modal-text">
+            Update the expiry time and download limits for:
+            <strong id="edit-file-name-display"></strong>
+          </p>
+          <div class="modal-input-group">
+            <label class="modal-label" for="edit-expiry-time">Expiry Time</label>
+            <input
+              type="datetime-local"
+              id="edit-expiry-time"
+              class="modal-input"
+              required
+            />
+          </div>
+          <div class="modal-input-group">
+            <label class="modal-label" for="edit-max-downloads">Maximum Downloads</label>
+            <input
+              type="number"
+              id="edit-max-downloads"
+              class="modal-input"
+              min="1"
+              placeholder="e.g., 5"
+              required
+            />
+          </div>
+          <div class="info-box">
+            <p>⚠️ Policy changes will apply to ALL recipients of this file.</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn modal-btn-cancel" id="edit-policy-cancel">
+            Cancel
+          </button>
+          <button class="modal-btn modal-btn-confirm" id="edit-policy-confirm">
+            Update Policy
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Remove Recipient Modal -->
+    <div class="modal" id="remove-recipient-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-icon">🗑️</div>
+          <h2 class="modal-title">Remove Recipient</h2>
+        </div>
+        <div class="modal-body">
+          <p class="modal-text">
+            Are you sure you want to remove access for
+            <strong id="remove-recipient-email"></strong>?
+          </p>
+          <p class="modal-text" style="color: #ef4444;">
+            ⚠️ This user will no longer be able to access this file. Other recipients will still have access.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn modal-btn-cancel" id="remove-cancel">
+            Cancel
+          </button>
+          <button class="modal-btn modal-btn-danger" id="remove-confirm">
+            Remove Access
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete File Modal -->
+    <div class="modal" id="delete-file-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-icon">⚠️</div>
+          <h2 class="modal-title">Delete File Permanently</h2>
+        </div>
+        <div class="modal-body">
+          <p class="modal-text">
+            Are you sure you want to permanently delete
+            <strong id="delete-file-name"></strong>?
+          </p>
+          <p class="modal-text" style="color: #ef4444; font-weight: 600;">
+            ⚠️ This action cannot be undone!
+          </p>
+          <div style="background: #fee2e2; padding: 16px; border-radius: 8px; margin-top: 16px;">
+            <p style="color: #dc2626; font-size: 13px; margin: 0;">
+              • All recipients will lose access<br>
+              • The file will be deleted from the server<br>
+              • All share records will be permanently removed<br>
+              • This action is irreversible
+            </p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn modal-btn-cancel" id="delete-cancel">
+            Cancel
+          </button>
+          <button class="modal-btn modal-btn-danger" id="delete-confirm">
+            Delete Permanently
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Encryption Report Modal -->
+    <div class="modal" id="encryption-report-modal">
+      <div class="modal-content modal-large">
+        <div class="modal-header">
+          <div class="modal-icon">📊</div>
+          <h2 class="modal-title">Encryption Report</h2>
+          <button class="modal-close" id="encryption-report-close">×</button>
+        </div>
+        <div class="modal-body" id="encryption-report-content">
+          <!-- Content will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ defer helps ensure DOM is ready and avoids inline issues -->
+    <script src="js/shared_files.js" defer></script>
+  </body>
+</html>

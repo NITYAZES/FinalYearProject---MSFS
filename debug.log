@@ -1,0 +1,134 @@
+[05-Jan-2026 17:26:16 Europe/Berlin] === RECEIVED DATA ===
+[05-Jan-2026 17:26:16 Europe/Berlin] token: present
+[05-Jan-2026 17:26:16 Europe/Berlin] email_or_username: Shash05
+[05-Jan-2026 17:26:16 Europe/Berlin] new_password: present (length: 12)
+[05-Jan-2026 17:26:16 Europe/Berlin] kek_enc: present
+[05-Jan-2026 17:26:16 Europe/Berlin] kek_iv: present
+[05-Jan-2026 17:26:16 Europe/Berlin] pwkdf_salt: present
+[05-Jan-2026 17:26:16 Europe/Berlin] pwkdf_iterations: 150000
+[05-Jan-2026 17:26:16 Europe/Berlin] ====================
+[05-Jan-2026 17:26:16 Europe/Berlin] Password hashed with bcrypt
+[05-Jan-2026 17:26:16 Europe/Berlin] Attempting to send OTP email to: shash787879@gmail.com
+[05-Jan-2026 17:26:16 Europe/Berlin] OTP: 305880
+[05-Jan-2026 17:26:20 Europe/Berlin] ✅ SUCCESS: OTP email sent to: shash787879@gmail.com
+[05-Jan-2026 17:26:20 Europe/Berlin] Password reset OTP sent to user_id: 19
+[05-Jan-2026 17:26:42 Europe/Berlin] === CONFIRM PASSWORD RESET - RAW INPUT ===
+[05-Jan-2026 17:26:42 Europe/Berlin] Input: {"token":"230e8bd4e6608ff1548f1cb84d03708b","otp":"305880","new_kek_enc_rk":"ttcP5vfYcD7u1u5Z0rQ464PFDORR6E++7tqEyQv5nE9eTBfYZx2aqf2ZMstngnI2","new_kek_rk_iv":"WoMfmYg7EHs6TKEt","new_rkdf_salt":"Qt39hqOenRhw2pX41tvIEw==","new_rkdf_iterations":150000}
+[05-Jan-2026 17:26:42 Europe/Berlin] Token: present
+[05-Jan-2026 17:26:42 Europe/Berlin] OTP: present
+[05-Jan-2026 17:26:42 Europe/Berlin] new_kek_enc_rk: present
+[05-Jan-2026 17:26:42 Europe/Berlin] new_kek_rk_iv: present
+[05-Jan-2026 17:26:42 Europe/Berlin] new_rkdf_salt: present
+[05-Jan-2026 17:26:42 Europe/Berlin] new_rkdf_iterations: 150000
+[05-Jan-2026 17:26:42 Europe/Berlin] Decoded IV length: 12 bytes
+[05-Jan-2026 17:26:42 Europe/Berlin] Decoded salt length: 16 bytes
+[05-Jan-2026 17:26:42 Europe/Berlin] Decoded KEK length: 48 bytes
+[05-Jan-2026 17:26:42 Europe/Berlin] Starting transaction...
+[05-Jan-2026 17:26:42 Europe/Berlin] Looking up pending reset...
+[05-Jan-2026 17:26:42 Europe/Berlin] Found pending reset: pending_id=1
+[05-Jan-2026 17:26:42 Europe/Berlin] Processing reset for user_id: 19
+[05-Jan-2026 17:26:42 Europe/Berlin] Current KEK version: 1
+[05-Jan-2026 17:26:42 Europe/Berlin] Current recovery key version: 1
+[05-Jan-2026 17:26:42 Europe/Berlin] Updating password...
+[05-Jan-2026 17:26:42 Europe/Berlin] Password updated successfully
+[05-Jan-2026 17:26:42 Europe/Berlin] Deactivating old KEK...
+[05-Jan-2026 17:26:42 Europe/Berlin] Inserting new KEK...
+[05-Jan-2026 17:26:42 Europe/Berlin] New KEK inserted successfully
+[05-Jan-2026 17:26:42 Europe/Berlin] Deactivating old recovery keys...
+[05-Jan-2026 17:26:42 Europe/Berlin] Inserting new recovery key...
+[05-Jan-2026 17:26:42 Europe/Berlin] New recovery key inserted successfully
+[05-Jan-2026 17:26:42 Europe/Berlin] Marking pending reset as confirmed...
+[05-Jan-2026 17:26:42 Europe/Berlin] Marking reset token as used...
+[05-Jan-2026 17:26:42 Europe/Berlin] Cleaning up old pending resets...
+[05-Jan-2026 17:26:42 Europe/Berlin] Logging security event...
+[05-Jan-2026 17:26:42 Europe/Berlin] Failed to log password reset: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ip_address' in 'field list'
+[05-Jan-2026 17:26:42 Europe/Berlin] Committing transaction...
+[05-Jan-2026 17:26:42 Europe/Berlin] ✅ Password reset confirmed successfully for user_id: 19
+[08-Jan-2026 07:59:08 Europe/Berlin] === RECEIVED DATA ===
+[08-Jan-2026 07:59:08 Europe/Berlin] token: present
+[08-Jan-2026 07:59:08 Europe/Berlin] email_or_username: Nitya01
+[08-Jan-2026 07:59:08 Europe/Berlin] new_password: present (length: 15)
+[08-Jan-2026 07:59:08 Europe/Berlin] kek_enc: present
+[08-Jan-2026 07:59:08 Europe/Berlin] kek_iv: present
+[08-Jan-2026 07:59:08 Europe/Berlin] pwkdf_salt: present
+[08-Jan-2026 07:59:08 Europe/Berlin] pwkdf_iterations: 150000
+[08-Jan-2026 07:59:08 Europe/Berlin] ====================
+[08-Jan-2026 07:59:08 Europe/Berlin] Password hashed with bcrypt
+[08-Jan-2026 07:59:08 Europe/Berlin] Attempting to send OTP email to: nityasathu123@gmail.com
+[08-Jan-2026 07:59:08 Europe/Berlin] OTP: 643266
+[08-Jan-2026 07:59:12 Europe/Berlin] ✅ SUCCESS: OTP email sent to: nityasathu123@gmail.com
+[08-Jan-2026 07:59:12 Europe/Berlin] Password reset OTP sent to user_id: 18
+[08-Jan-2026 07:59:23 Europe/Berlin] === CONFIRM PASSWORD RESET - RAW INPUT ===
+[08-Jan-2026 07:59:23 Europe/Berlin] Input: {"token":"fa92a8403dc9234c064646cb6b2ff42d","otp":"643266","new_kek_enc_rk":"QzaCC12ij9UWT1rUj/JLUSSdyjznl+Dkh99rhc/S+YpPa/p7Pe4/u3Xxcj+JKDmS","new_kek_rk_iv":"mZoUmnwQ4/rqtVq3","new_rkdf_salt":"kU4SA8pBcTIPQqaq5d6qTA==","new_rkdf_iterations":150000}
+[08-Jan-2026 07:59:23 Europe/Berlin] Token: present
+[08-Jan-2026 07:59:23 Europe/Berlin] OTP: present
+[08-Jan-2026 07:59:23 Europe/Berlin] new_kek_enc_rk: present
+[08-Jan-2026 07:59:23 Europe/Berlin] new_kek_rk_iv: present
+[08-Jan-2026 07:59:23 Europe/Berlin] new_rkdf_salt: present
+[08-Jan-2026 07:59:23 Europe/Berlin] new_rkdf_iterations: 150000
+[08-Jan-2026 07:59:23 Europe/Berlin] Decoded IV length: 12 bytes
+[08-Jan-2026 07:59:23 Europe/Berlin] Decoded salt length: 16 bytes
+[08-Jan-2026 07:59:23 Europe/Berlin] Decoded KEK length: 48 bytes
+[08-Jan-2026 07:59:23 Europe/Berlin] Starting transaction...
+[08-Jan-2026 07:59:23 Europe/Berlin] Looking up pending reset...
+[08-Jan-2026 07:59:23 Europe/Berlin] Found pending reset: pending_id=2
+[08-Jan-2026 07:59:23 Europe/Berlin] Processing reset for user_id: 18
+[08-Jan-2026 07:59:23 Europe/Berlin] Current KEK version: 1
+[08-Jan-2026 07:59:23 Europe/Berlin] Current recovery key version: 1
+[08-Jan-2026 07:59:23 Europe/Berlin] Updating password...
+[08-Jan-2026 07:59:23 Europe/Berlin] Password updated successfully
+[08-Jan-2026 07:59:23 Europe/Berlin] Deactivating old KEK...
+[08-Jan-2026 07:59:23 Europe/Berlin] Inserting new KEK...
+[08-Jan-2026 07:59:23 Europe/Berlin] New KEK inserted successfully
+[08-Jan-2026 07:59:23 Europe/Berlin] Deactivating old recovery keys...
+[08-Jan-2026 07:59:23 Europe/Berlin] Inserting new recovery key...
+[08-Jan-2026 07:59:23 Europe/Berlin] New recovery key inserted successfully
+[08-Jan-2026 07:59:23 Europe/Berlin] Marking pending reset as confirmed...
+[08-Jan-2026 07:59:23 Europe/Berlin] Marking reset token as used...
+[08-Jan-2026 07:59:23 Europe/Berlin] Cleaning up old pending resets...
+[08-Jan-2026 07:59:23 Europe/Berlin] Logging security event...
+[08-Jan-2026 07:59:23 Europe/Berlin] Failed to log password reset: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ip_address' in 'field list'
+[08-Jan-2026 07:59:23 Europe/Berlin] Committing transaction...
+[08-Jan-2026 07:59:23 Europe/Berlin] ✅ Password reset confirmed successfully for user_id: 18
+[18-Jan-2026 14:04:59 Europe/Berlin] [confirm_password_reset] audit log failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ip_address' in 'field list'
+[03-Feb-2026 17:14:08 Europe/Berlin] [confirm_password_reset] Raw input length: 250
+[03-Feb-2026 17:14:08 Europe/Berlin] [confirm_password_reset] Raw input preview: {"token":"4be07fa3a7e47afac1703ea29706e4a3","otp":"417473","new_kek_enc_rk":"+I3gGS8Iciry+O/bY4gcz3LS6OOY7q6q1TirSrVnIbNfctb9jIKPQQTtlquRyJOI","new_kek_rk_iv":"0jb03/rON60z9Si3","new_rkdf_salt":"qENFE
+[03-Feb-2026 17:14:08 Europe/Berlin] [confirm_password_reset] Parsed data keys: token, otp, new_kek_enc_rk, new_kek_rk_iv, new_rkdf_salt, new_rkdf_iterations
+[03-Feb-2026 17:14:08 Europe/Berlin] [confirm_password_reset] All validations passed, proceeding with database operations
+[03-Feb-2026 17:14:08 Europe/Berlin] [confirm_password_reset] No pending reset found for token/OTP combination
+[03-Feb-2026 17:14:48 Europe/Berlin] [confirm_password_reset] Raw input length: 250
+[03-Feb-2026 17:14:48 Europe/Berlin] [confirm_password_reset] Raw input preview: {"token":"4be07fa3a7e47afac1703ea29706e4a3","otp":"753612","new_kek_enc_rk":"N9f5nOzWEknaLriMNBQmjuGbPEPLI8Jhvf0wiVwtUCdehigw1s8dyV0CmRTR+k3K","new_kek_rk_iv":"BN0XCZc/n0M9VE3n","new_rkdf_salt":"LQXUz
+[03-Feb-2026 17:14:48 Europe/Berlin] [confirm_password_reset] Parsed data keys: token, otp, new_kek_enc_rk, new_kek_rk_iv, new_rkdf_salt, new_rkdf_iterations
+[03-Feb-2026 17:14:48 Europe/Berlin] [confirm_password_reset] All validations passed, proceeding with database operations
+[03-Feb-2026 17:14:48 Europe/Berlin] [confirm_password_reset] No pending reset found for token/OTP combination
+[03-Feb-2026 17:18:40 Europe/Berlin] [confirm_password_reset] Raw input length: 250
+[03-Feb-2026 17:18:40 Europe/Berlin] [confirm_password_reset] Raw input preview: {"token":"4be07fa3a7e47afac1703ea29706e4a3","otp":"813976","new_kek_enc_rk":"e7vIaQQvCI6mFUjtmKFK7YwbarvrbJoE5ch31ddPyhC7IUBNOrGx/9E5+B8OrfxU","new_kek_rk_iv":"Qwfvr5IVVNes54SW","new_rkdf_salt":"IpMe5
+[03-Feb-2026 17:18:40 Europe/Berlin] [confirm_password_reset] Parsed data keys: token, otp, new_kek_enc_rk, new_kek_rk_iv, new_rkdf_salt, new_rkdf_iterations
+[03-Feb-2026 17:18:40 Europe/Berlin] [confirm_password_reset] All validations passed, proceeding with database operations
+[03-Feb-2026 17:18:40 Europe/Berlin] [confirm_password_reset] No pending reset found for token/OTP combination
+[03-Feb-2026 17:31:06 Europe/Berlin] [confirm_password_reset] Raw input length: 250
+[03-Feb-2026 17:31:06 Europe/Berlin] [confirm_password_reset] Raw input preview: {"token":"b8b710da722799a7a3e65bc58d742dc2","otp":"358289","new_kek_enc_rk":"x/IEHCVqDxwkmu+gVrWt8WEXY+HaA44Z9HEQmkqXjLV+DtxYG9G12tDnnYjqufTu","new_kek_rk_iv":"w9p7fNtuTYRA8yWk","new_rkdf_salt":"/AYJM
+[03-Feb-2026 17:31:06 Europe/Berlin] [confirm_password_reset] Parsed data keys: token, otp, new_kek_enc_rk, new_kek_rk_iv, new_rkdf_salt, new_rkdf_iterations
+[03-Feb-2026 17:31:06 Europe/Berlin] [confirm_password_reset] All validations passed, proceeding with database operations
+[03-Feb-2026 17:31:06 Europe/Berlin] [confirm_password_reset] Found pending reset ID: 9
+[03-Feb-2026 17:31:06 Europe/Berlin] [confirm_password_reset] Processing reset for user ID: 5
+[03-Feb-2026 17:31:06 Europe/Berlin] [confirm_password_reset] Current KEK version: 1
+[03-Feb-2026 17:31:06 Europe/Berlin] [confirm_password_reset] Current recovery key version: 1
+[03-Feb-2026 17:31:06 Europe/Berlin] [confirm_password_reset] Password updated successfully
+[03-Feb-2026 17:31:06 Europe/Berlin] [confirm_password_reset] KEK rotated successfully
+[03-Feb-2026 17:31:06 Europe/Berlin] [confirm_password_reset] Recovery key rotated successfully
+[03-Feb-2026 17:31:06 Europe/Berlin] [confirm_password_reset] Transaction committed successfully
+[03-Feb-2026 17:31:06 Europe/Berlin] [confirm_password_reset] Audit log written successfully
+[03-Feb-2026 17:39:06 Europe/Berlin] [confirm_password_reset] Raw input length: 250
+[03-Feb-2026 17:39:06 Europe/Berlin] [confirm_password_reset] Raw input preview: {"token":"73cc1325efa557145b85a1de26f6ad52","otp":"044057","new_kek_enc_rk":"tg02dB+xWTsZ8t9U5ovbn+nmVjDEfSjeT0kqAYkDDjQTJdBPV06NbvZTJFc1k2t5","new_kek_rk_iv":"/NbZqSjt5wAgoQ6Z","new_rkdf_salt":"OZjPq
+[03-Feb-2026 17:39:06 Europe/Berlin] [confirm_password_reset] Parsed data keys: token, otp, new_kek_enc_rk, new_kek_rk_iv, new_rkdf_salt, new_rkdf_iterations
+[03-Feb-2026 17:39:06 Europe/Berlin] [confirm_password_reset] All validations passed, proceeding with database operations
+[03-Feb-2026 17:39:06 Europe/Berlin] [confirm_password_reset] Found pending reset ID: 10
+[03-Feb-2026 17:39:06 Europe/Berlin] [confirm_password_reset] Processing reset for user ID: 2
+[03-Feb-2026 17:39:06 Europe/Berlin] [confirm_password_reset] Current KEK version: 1
+[03-Feb-2026 17:39:06 Europe/Berlin] [confirm_password_reset] Current recovery key version: 1
+[03-Feb-2026 17:39:06 Europe/Berlin] [confirm_password_reset] Password updated successfully
+[03-Feb-2026 17:39:06 Europe/Berlin] [confirm_password_reset] KEK rotated successfully
+[03-Feb-2026 17:39:06 Europe/Berlin] [confirm_password_reset] Recovery key rotated successfully
+[03-Feb-2026 17:39:06 Europe/Berlin] [confirm_password_reset] Transaction committed successfully
+[03-Feb-2026 17:39:06 Europe/Berlin] [confirm_password_reset] Audit log written successfully

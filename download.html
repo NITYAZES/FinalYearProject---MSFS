@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Download Encrypted File - Secure File Share</title>
+    <link rel="stylesheet" href="./css/download.css" />
+
+    <!-- jsPDF Library for PDF Report Generation (Local Copy) -->
+    <script src="./js/jspdf.umd.min.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- Header Section -->
+      <div class="header-section">
+        <h1>🔒 Download Encrypted File</h1>
+        <p class="subtitle">Securely decrypt and download end-to-end encrypted files</p>
+
+        <div class="nav-row">
+          <a href="./dashboard_user.html" class="nav-link">← Back to Dashboard</a>
+          <button type="button" class="nav-link" id="back-to-list">← Back to Files</button>
+        </div>
+      </div>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <!-- Feedback Messages -->
+        <div id="feedback-message"></div>
+
+        <!-- File Info Container -->
+        <div id="file-info">
+          <div class="file-card loading-state">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Loading file information...</p>
+          </div>
+        </div>
+
+        <!-- Progress Container -->
+        <div id="progress-container">
+          <div class="progress-header">
+            <span class="progress-icon">⚙️</span>
+            <span id="progress-text">Processing...</span>
+          </div>
+          <div class="progress-bar-container">
+            <div id="progress-bar"></div>
+          </div>
+        </div>
+
+        <!-- Download Button -->
+        <button class="download-btn" id="download-decrypt-btn" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Decrypt & Download File</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- IMPORTANT: keep JS at the end so elements exist before JS runs -->
+    <script src="./js/download.js"></script>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+[20-Dec-2025 04:59:06 Europe/Berlin] === RECEIVED DATA ===
+[20-Dec-2025 04:59:06 Europe/Berlin] token: present
+[20-Dec-2025 04:59:06 Europe/Berlin] email_or_username: danya@gmail.com
+[20-Dec-2025 04:59:06 Europe/Berlin] new_password: MISSING
+[20-Dec-2025 04:59:06 Europe/Berlin] kek_enc: present
+[20-Dec-2025 04:59:06 Europe/Berlin] kek_iv: present
+[20-Dec-2025 04:59:06 Europe/Berlin] pwkdf_salt: present
+[20-Dec-2025 04:59:06 Europe/Berlin] pwkdf_iterations: 150000
+[20-Dec-2025 04:59:06 Europe/Berlin] ====================
+[20-Dec-2025 04:59:06 Europe/Berlin] Validation failed: Missing crypto materials
+[20-Dec-2025 04:59:06 Europe/Berlin] kekEncB64: OK
+[20-Dec-2025 04:59:06 Europe/Berlin] kekIvB64: OK
+[20-Dec-2025 04:59:06 Europe/Berlin] pwkdfSaltB64: OK
+[20-Dec-2025 04:59:06 Europe/Berlin] pwkdfIters: 150000 (OK)
+[20-Dec-2025 04:59:06 Europe/Berlin] newPassword: MISSING
+[20-Dec-2025 04:59:24 Europe/Berlin] === RECEIVED DATA ===
+[20-Dec-2025 04:59:24 Europe/Berlin] token: present
+[20-Dec-2025 04:59:24 Europe/Berlin] email_or_username: danya@gmail.com
+[20-Dec-2025 04:59:24 Europe/Berlin] new_password: MISSING
+[20-Dec-2025 04:59:24 Europe/Berlin] kek_enc: present
+[20-Dec-2025 04:59:24 Europe/Berlin] kek_iv: present
+[20-Dec-2025 04:59:24 Europe/Berlin] pwkdf_salt: present
+[20-Dec-2025 04:59:24 Europe/Berlin] pwkdf_iterations: 150000
+[20-Dec-2025 04:59:24 Europe/Berlin] ====================
+[20-Dec-2025 04:59:24 Europe/Berlin] Validation failed: Missing crypto materials
+[20-Dec-2025 04:59:24 Europe/Berlin] kekEncB64: OK
+[20-Dec-2025 04:59:24 Europe/Berlin] kekIvB64: OK
+[20-Dec-2025 04:59:24 Europe/Berlin] pwkdfSaltB64: OK
+[20-Dec-2025 04:59:24 Europe/Berlin] pwkdfIters: 150000 (OK)
+[20-Dec-2025 04:59:24 Europe/Berlin] newPassword: MISSING
+[20-Dec-2025 05:02:43 Europe/Berlin] === RECEIVED DATA ===
+[20-Dec-2025 05:02:43 Europe/Berlin] token: present
+[20-Dec-2025 05:02:43 Europe/Berlin] email_or_username: danya@gmail.com
+[20-Dec-2025 05:02:43 Europe/Berlin] new_password: MISSING
+[20-Dec-2025 05:02:43 Europe/Berlin] kek_enc: present
+[20-Dec-2025 05:02:43 Europe/Berlin] kek_iv: present
+[20-Dec-2025 05:02:43 Europe/Berlin] pwkdf_salt: present
+[20-Dec-2025 05:02:43 Europe/Berlin] pwkdf_iterations: 150000
+[20-Dec-2025 05:02:43 Europe/Berlin] ====================
+[20-Dec-2025 05:02:43 Europe/Berlin] Validation failed: Missing crypto materials
+[20-Dec-2025 05:02:43 Europe/Berlin] kekEncB64: OK
+[20-Dec-2025 05:02:43 Europe/Berlin] kekIvB64: OK
+[20-Dec-2025 05:02:43 Europe/Berlin] pwkdfSaltB64: OK
+[20-Dec-2025 05:02:43 Europe/Berlin] pwkdfIters: 150000 (OK)
+[20-Dec-2025 05:02:43 Europe/Berlin] newPassword: MISSING
+[20-Dec-2025 05:06:11 Europe/Berlin] === RECEIVED DATA ===
+[20-Dec-2025 05:06:11 Europe/Berlin] token: present
+[20-Dec-2025 05:06:11 Europe/Berlin] email_or_username: danya@gmail.com
+[20-Dec-2025 05:06:11 Europe/Berlin] new_password: present (length: 16)
+[20-Dec-2025 05:06:12 Europe/Berlin] kek_enc: present
+[20-Dec-2025 05:06:12 Europe/Berlin] kek_iv: present
+[20-Dec-2025 05:06:12 Europe/Berlin] pwkdf_salt: present
+[20-Dec-2025 05:06:12 Europe/Berlin] pwkdf_iterations: 150000
+[20-Dec-2025 05:06:12 Europe/Berlin] ====================
+[20-Dec-2025 05:06:12 Europe/Berlin] Password hashed with bcrypt
+[20-Dec-2025 05:06:12 Europe/Berlin] Attempting to send OTP email to: danya@gmail.com
+[20-Dec-2025 05:06:12 Europe/Berlin] OTP: 594837
+[20-Dec-2025 05:06:16 Europe/Berlin] ✅ SUCCESS: OTP email sent to: danya@gmail.com
+[20-Dec-2025 05:06:16 Europe/Berlin] Password reset OTP sent to user_id: 34

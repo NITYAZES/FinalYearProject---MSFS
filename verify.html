@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Email Verification</title>
+  <link rel="stylesheet" href="css/verify.css" />
+</head>
+<body>
+  <main class="card">
+    <div class="icon-wrapper">
+      <svg viewBox="0 0 24 24">
+        <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+      </svg>
+    </div>
+    
+    <h1>Verify your email</h1>
+    <p class="desc">Enter the 6-digit code we sent to your email address</p>
+
+    <form id="verify-form" novalidate>
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        placeholder="you@example.com"
+        autocomplete="email"
+        required
+      />
+
+      <label for="code">Verification code</label>
+      <input
+        id="code"
+        type="text"
+        inputmode="numeric"
+        pattern="\d{6}"
+        maxlength="6"
+        placeholder="000000"
+        required
+      />
+
+      <button id="submit-btn" type="submit">Verify Email</button>
+      <div id="msg" class="msg" role="status" aria-live="polite"></div>
+
+      <div class="actions">
+        <button
+          id="signin-btn"
+          type="button"
+          class="ghost"
+        >
+          Back to sign in
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <script src="./js/verify.js"></script>
+</body>
+</html>

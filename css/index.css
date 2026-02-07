@@ -1,0 +1,350 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(135deg, #1f2933 0%, #312e81 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.container {
+  background: rgb(254, 254, 255);
+  border-radius: 14px;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.26);
+  padding: 18px 18px 16px;
+  width: 100%;
+  max-width: 380px;
+}
+
+.title-wrapper {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  background: #312e81;
+  border-radius: 14px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.brand-logo::after {
+  content: "🔒";
+  font-size: 20px;
+  position: absolute;
+}
+
+h2 {
+  color: #333;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.media-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.media-icon {
+  width: 30px;
+  height: 30px;
+  background: #312e81;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.media-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: #e5e5e9;
+}
+
+#feedback-message {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  max-width: 520px;
+  width: calc(100% - 20px);
+  margin: 0 auto;
+  padding: 10px 40px 10px 14px;
+  border-radius: 10px;
+  font: 600 0.9rem/1.25 system-ui, sans-serif;
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+#feedback-message.show {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+#feedback-message.error {
+  background: #fee;
+  color: #c33;
+  border: 1px solid #fcc;
+}
+
+#feedback-message.success {
+  background: #efe;
+  color: #3c3;
+  border: 1px solid #cfc;
+}
+
+#feedback-message.info {
+  background: #e7f3ff;
+  color: #0066cc;
+  border: 1px solid #b3d9ff;
+}
+
+#feedback-text {
+  display: inline-block;
+  padding-right: 8px;
+}
+
+.feedback-close {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.feedback-close:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.feedback-close:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.feedback-close:focus {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+#feedback-message.error .feedback-close {
+  color: #c33;
+}
+#feedback-message.success .feedback-close {
+  color: #3c3;
+}
+#feedback-message.info .feedback-close {
+  color: #0066cc;
+}
+
+.input-group {
+  margin-bottom: 12px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 13px;
+  transition: border-color 0.2s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 40px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-password svg {
+  width: 18px;
+  height: 18px;
+  color: #9ca3af;
+  transition: color 0.2s;
+}
+
+.toggle-password:hover svg {
+  color: #312e81;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 11px;
+  background: #312e81;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(102, 126, 234, 0.32);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.toggle-link {
+  text-align: center;
+  margin-top: 12px;
+  color: #666;
+  font-size: 12.5px;
+}
+
+.toggle-link a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.toggle-link a:hover {
+  text-decoration: underline;
+}
+
+.forgot-link {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #667eea;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.forgot-link:hover {
+  color: #764ba2;
+  transform: translateY(-1px);
+}
+
+.forgot-link:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.forgot-link:active {
+  transform: translateY(0);
+  opacity: 0.85;
+}
+
+.back-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: #312e81;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 12px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  margin-top: 20px; 
+}
+
+
+.back-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #312e81;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  transition: all 0.2s;
+  padding: 7px 12px;
+  border-radius: 8px;
+}
+
+.back-link a:hover {
+  color: #764ba2;
+  background: #f7fafc;
+}
+
+.back-link a svg {
+  transition: transform 0.2s;
+}
+
+.back-link a:hover svg {
+  transform: translateX(5px); /* Adds a slight movement effect to the icon */
+}
+
+@media (max-width: 420px) {
+  .container {
+    max-width: 360px;
+    padding: 16px 14px 14px;
+  }
+}
