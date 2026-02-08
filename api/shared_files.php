@@ -143,6 +143,12 @@ try {
             revokeShare($pdo, $user_id, is_array($data) ? $data : []);
             break;
 
+        case 'reactivate_share':
+            if ($method !== 'POST') throw new Exception('POST method required');
+            $data = json_decode(file_get_contents('php://input') ?: '[]', true);
+            reactivateShare($pdo, $user_id, is_array($data) ? $data : []);
+            break;
+
         case 'delete_file':
             if ($method !== 'POST') throw new Exception('POST method required');
             $data = json_decode(file_get_contents('php://input') ?: '[]', true);
@@ -228,35 +234,32 @@ function getSharedFiles(PDO $pdo, int $userId): void
         ];
 
         $groupedFiles[$fileId]['recipient_count']++;
-        if ($file['status'] === 'active') {
-            $groupedFiles[$fileId]['active_recipients']++;
-        }
+        $groupedFiles[$fileId]['total_views'] += (int)($file['decrypt_count'] ?? 0);
     }
 
-    $filesArray = array_values($groupedFiles);
+    $statsQuery = "
+        SELECT 
+            COUNT(DISTINCT file_id) as total_shared,
+            COUNT(*) as total_recipients,
+            SUM(decrypt_count) as total_views,
+            COUNT(CASE WHEN status = 'active' THEN 1 END) as active_shares
+        FROM shared_files
+        WHERE sender_id = :user_id
+    ";
 
-    $totalShared = count($filesArray);
-    $totalRecipients = 0;
-    $activeShares = 0;
-
-    foreach ($filesArray as $f) {
-        $totalRecipients += (int)$f['recipient_count'];
-        if ($f['status'] === 'active' && !empty($f['expiry_time']) && strtotime((string)$f['expiry_time']) > time()) {
-            $activeShares++;
-        }
-    }
-
-    $stats = [
-        'total_shared' => $totalShared,
-        'total_recipients' => $totalRecipients,
-        'total_views' => 0,
-        'active_shares' => $activeShares
-    ];
+    $statsStmt = $pdo->prepare($statsQuery);
+    $statsStmt->execute([':user_id' => $userId]);
+    $stats = $statsStmt->fetch(PDO::FETCH_ASSOC);
 
     out(200, [
         'success' => true,
-        'files' => $filesArray,
-        'stats' => $stats
+        'files' => array_values($groupedFiles),
+        'stats' => [
+            'total_shared' => (int)($stats['total_shared'] ?? 0),
+            'total_recipients' => (int)($stats['total_recipients'] ?? 0),
+            'total_views' => (int)($stats['total_views'] ?? 0),
+            'active_shares' => (int)($stats['active_shares'] ?? 0)
+        ]
     ]);
 }
 
@@ -264,106 +267,59 @@ function editPolicy(PDO $pdo, int $userId, array $data): void
 {
     $fileId = (string)($data['file_id'] ?? '');
     $expiryTime = (string)($data['expiry_time'] ?? '');
-    $maxDecryptCount = $data['max_decrypt_count'] ?? '';
+    $maxDecryptCount = (int)($data['max_decrypt_count'] ?? 0);
 
-    if ($fileId === '' || $expiryTime === '' || $maxDecryptCount === '') {
-        throw new Exception('File ID, expiry time, and max downloads are required');
+    if ($fileId === '' || $expiryTime === '' || $maxDecryptCount < 1) {
+        throw new Exception('File ID, expiry time, and max decrypt count (≥1) are required');
     }
 
-    $expiryTimestamp = strtotime($expiryTime);
-    if ($expiryTimestamp === false) throw new Exception('Invalid expiry time format');
-    if ($expiryTimestamp <= time()) throw new Exception('Expiry time must be in the future');
-
-    $maxDecryptCount = (int)$maxDecryptCount;
-    if ($maxDecryptCount < 1) throw new Exception('Maximum downloads must be at least 1');
-
-    // Get old policy info
-    $oldStmt = $pdo->prepare("
-        SELECT file_name, expiry_time, max_decrypt_count, policy_json
-        FROM shared_files
-        WHERE file_id = :file_id AND sender_id = :sender_id
+    // Verify ownership
+    $checkStmt = $pdo->prepare("
+        SELECT file_name 
+        FROM shared_files 
+        WHERE file_id = :file_id AND sender_id = :sender_id 
         LIMIT 1
     ");
-    $oldStmt->execute([':file_id' => $fileId, ':sender_id' => $userId]);
-    $old = $oldStmt->fetch(PDO::FETCH_ASSOC);
+    $checkStmt->execute([':file_id' => $fileId, ':sender_id' => $userId]);
 
-    if (!$old) {
-        logUnauthorizedFileAction($pdo, $userId, 'UNAUTHORIZED_FILE_POLICY_EDIT', 'Policy edit denied: not owner or file not found', [
+    if (!$checkStmt->fetch()) {
+        logUnauthorizedFileAction($pdo, $userId, 'UNAUTHORIZED_POLICY_EDIT', 'Policy edit denied: not owner or file not found', [
             'file_id' => $fileId
         ]);
         throw new Exception('File not found or you do not have permission');
     }
 
-    $countStmt = $pdo->prepare("SELECT COUNT(*) FROM shared_files WHERE file_id = :file_id AND sender_id = :sender_id");
-    $countStmt->execute([':file_id' => $fileId, ':sender_id' => $userId]);
-    $recipientsAffected = (int)$countStmt->fetchColumn();
-
-    $expiryDb = date('Y-m-d H:i:s', $expiryTimestamp);
-
     // Update policy
-    $updateQuery = "
-        UPDATE shared_files 
-        SET expiry_time = :expiry_time_db, 
-            max_decrypt_count = :max_dc_db,
-            policy_json = JSON_SET(
-                COALESCE(policy_json, '{}'),
-                '$.expiry_time', :expiry_time_json,
-                '$.max_decrypt_count', :max_dc_json
-            )
-        WHERE file_id = :file_id
-          AND sender_id = :sender_id
-    ";
+    $updateStmt = $pdo->prepare("
+        UPDATE shared_files
+        SET expiry_time = :expiry_time, max_decrypt_count = :max_decrypt_count
+        WHERE file_id = :file_id AND sender_id = :sender_id
+    ");
 
-    $updateStmt = $pdo->prepare($updateQuery);
     $updateStmt->execute([
-        ':expiry_time_db'   => $expiryDb,
-        ':max_dc_db'        => $maxDecryptCount,
-        ':expiry_time_json' => $expiryDb,
-        ':max_dc_json'      => $maxDecryptCount,
-        ':file_id'          => $fileId,
-        ':sender_id'        => $userId
+        ':file_id' => $fileId,
+        ':sender_id' => $userId,
+        ':expiry_time' => $expiryTime,
+        ':max_decrypt_count' => $maxDecryptCount
     ]);
-
-    $affectedRows = $updateStmt->rowCount();
-
-    // Get all affected receiver IDs for notifications
-    $receiversStmt = $pdo->prepare('
-        SELECT receiver_id FROM shared_files WHERE file_id = :file_id
-    ');
-    $receiversStmt->execute([':file_id' => $fileId]);
-    $receiverIds = $receiversStmt->fetchAll(PDO::FETCH_COLUMN);
-
-    // Notify about policy change
-    notifyPolicyEdited(
-        $pdo,
-        $userId,
-        array_map('intval', $receiverIds),
-        $fileId,
-        $old['file_name']
-    );
 
     // Audit log
     logFileAudit(
         $pdo,
         $userId,
         'FILE_POLICY_UPDATED',
-        "User updated policy for file '{$old['file_name']}' (ID: {$fileId})",
+        "User updated policy for file ID: {$fileId}",
         [
             'file_id' => $fileId,
-            'file_name' => $old['file_name'],
-            'recipients_affected' => $recipientsAffected,
-            'changes' => [
-                'expiry_time' => ['old' => $old['expiry_time'], 'new' => $expiryDb],
-                'max_decrypt_count' => ['old' => (int)$old['max_decrypt_count'], 'new' => $maxDecryptCount],
-            ],
+            'expiry_time' => $expiryTime,
+            'max_decrypt_count' => $maxDecryptCount,
             'timestamp' => date('Y-m-d H:i:s')
-        ],
-        'info'
+        ]
     );
 
     out(200, [
         'success' => true,
-        'message' => "Policy updated for all recipients ({$affectedRows} recipients affected)"
+        'message' => 'Policy updated successfully'
     ]);
 }
 
@@ -477,6 +433,11 @@ function revokeShare(PDO $pdo, int $userId, array $data): void
         throw new Exception('File not found or you do not have permission');
     }
 
+    // Check if already revoked
+    if ($fileInfo['status'] === 'revoked') {
+        throw new Exception('File is already revoked');
+    }
+
     // Get all affected receiver IDs before revoking
     $receiversStmt = $pdo->prepare('
         SELECT receiver_id FROM shared_files WHERE file_id = :file_id
@@ -484,8 +445,12 @@ function revokeShare(PDO $pdo, int $userId, array $data): void
     $receiversStmt->execute([':file_id' => $fileId]);
     $receiverIds = $receiversStmt->fetchAll(PDO::FETCH_COLUMN);
 
-    // Revoke access (set status to deleted)
-    $updateStmt = $pdo->prepare("UPDATE shared_files SET status = 'deleted' WHERE file_id = :file_id AND sender_id = :sender_id");
+    // Revoke access (set status to 'revoked' - SOFT DELETE)
+    $updateStmt = $pdo->prepare("
+        UPDATE shared_files 
+        SET status = 'revoked' 
+        WHERE file_id = :file_id AND sender_id = :sender_id
+    ");
     $updateStmt->execute([':file_id' => $fileId, ':sender_id' => $userId]);
     $affectedRows = $updateStmt->rowCount();
 
@@ -508,7 +473,7 @@ function revokeShare(PDO $pdo, int $userId, array $data): void
             'file_id' => $fileId,
             'file_name' => $fileInfo['file_name'],
             'previous_status' => $fileInfo['status'],
-            'new_status' => 'deleted',
+            'new_status' => 'revoked',
             'recipients_affected' => $affectedRows,
             'timestamp' => date('Y-m-d H:i:s')
         ],
@@ -517,7 +482,108 @@ function revokeShare(PDO $pdo, int $userId, array $data): void
 
     out(200, [
         'success' => true,
-        'message' => "Access revoked for all {$affectedRows} recipient(s)."
+        'message' => "Access revoked for all {$affectedRows} recipient(s). File can be reactivated later if needed."
+    ]);
+}
+
+function reactivateShare(PDO $pdo, int $userId, array $data): void
+{
+    $fileId = (string)($data['file_id'] ?? '');
+    if ($fileId === '') throw new Exception('File ID is required');
+
+    // Get file info and verify it's revoked
+    $infoStmt = $pdo->prepare("
+        SELECT file_name, status, expiry_time, storage_path
+        FROM shared_files
+        WHERE file_id = :file_id AND sender_id = :sender_id
+        LIMIT 1
+    ");
+    $infoStmt->execute([':file_id' => $fileId, ':sender_id' => $userId]);
+    $fileInfo = $infoStmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$fileInfo) {
+        logUnauthorizedFileAction($pdo, $userId, 'UNAUTHORIZED_REACTIVATE_SHARE', 'Reactivate share denied: not owner or file not found', [
+            'file_id' => $fileId
+        ]);
+        throw new Exception('File not found or you do not have permission');
+    }
+
+    // Check if file is revoked
+    if ($fileInfo['status'] !== 'revoked') {
+        throw new Exception('Only revoked files can be reactivated. Current status: ' . $fileInfo['status']);
+    }
+
+    // Check if file has expired
+    if ($fileInfo['expiry_time']) {
+        $expiryDate = new DateTime($fileInfo['expiry_time']);
+        $now = new DateTime();
+        if ($expiryDate < $now) {
+            throw new Exception('Cannot reactivate an expired file. Please update the expiry time first.');
+        }
+    }
+
+    // Verify physical file still exists
+    $storagePath = (string)($fileInfo['storage_path'] ?? '');
+    if ($storagePath !== '' && !file_exists($storagePath)) {
+        logFileAudit(
+            $pdo,
+            $userId,
+            'FILE_REACTIVATE_FAILED_MISSING',
+            "Reactivation failed: physical file missing for '{$fileInfo['file_name']}' (ID: {$fileId})",
+            [
+                'file_id' => $fileId,
+                'file_name' => $fileInfo['file_name']
+            ],
+            'error'
+        );
+        throw new Exception('Cannot reactivate: physical file no longer exists on server');
+    }
+
+    // Get all affected receiver IDs
+    $receiversStmt = $pdo->prepare('
+        SELECT receiver_id FROM shared_files WHERE file_id = :file_id
+    ');
+    $receiversStmt->execute([':file_id' => $fileId]);
+    $receiverIds = $receiversStmt->fetchAll(PDO::FETCH_COLUMN);
+
+    // Reactivate (set status back to 'active')
+    $updateStmt = $pdo->prepare("
+        UPDATE shared_files 
+        SET status = 'active' 
+        WHERE file_id = :file_id AND sender_id = :sender_id
+    ");
+    $updateStmt->execute([':file_id' => $fileId, ':sender_id' => $userId]);
+    $affectedRows = $updateStmt->rowCount();
+
+    // Notify recipients about reactivation
+    notifyFileReactivated(
+        $pdo,
+        $userId,
+        array_map('intval', $receiverIds),
+        $fileId,
+        $fileInfo['file_name']
+    );
+
+    // Audit log
+    logFileAudit(
+        $pdo,
+        $userId,
+        'FILE_SHARE_REACTIVATED',
+        "User reactivated sharing for file '{$fileInfo['file_name']}' (ID: {$fileId})",
+        [
+            'file_id' => $fileId,
+            'file_name' => $fileInfo['file_name'],
+            'previous_status' => 'revoked',
+            'new_status' => 'active',
+            'recipients_affected' => $affectedRows,
+            'timestamp' => date('Y-m-d H:i:s')
+        ],
+        'info'
+    );
+
+    out(200, [
+        'success' => true,
+        'message' => "File reactivated successfully! All {$affectedRows} recipient(s) can now access it again."
     ]);
 }
 

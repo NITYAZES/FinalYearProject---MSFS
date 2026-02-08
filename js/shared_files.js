@@ -72,6 +72,10 @@ function setupDelegatedClickHandlers() {
         if (fileId) confirmRevokeShare(fileId);
         break;
 
+      case "confirm-reactivate":
+        if (fileId) confirmReactivateShare(fileId);
+        break;
+
       case "confirm-delete":
         if (fileId) confirmDeleteFile(fileId);
         break;
@@ -210,7 +214,7 @@ function filterAndDisplayFiles() {
 
     const expiry = file.expiry_time ? new Date(file.expiry_time) : null;
     const isExpired = expiry ? expiry < new Date() : false;
-    const isRevoked = file.status === "deleted";
+    const isRevoked = file.status === "revoked";
 
     const matchesStatus =
       statusFilter === "all" ||
@@ -266,309 +270,326 @@ function displayFiles(files) {
 
   // Load recipients for each file
   files.forEach((file) => {
-    loadFileRecipients(file.file_id);
+    loadRecipients(file.file_id);
   });
 }
 
 function createFileCard(file) {
-  const isExpired = file.expiry_time ? new Date(file.expiry_time) < new Date() : false;
-  const isRevoked = file.status === "deleted";
-  const statusClass = isRevoked ? "revoked" : isExpired ? "expired" : "active";
-  const fileIcon = getFileIcon(file.mime_type);
+  const expiry = file.expiry_time ? new Date(file.expiry_time) : null;
+  const now = new Date();
+  const isExpired = expiry && expiry < now;
+  const isRevoked = file.status === "revoked";
+
+  const maxCount = parseInt(file.max_decrypt_count, 10) || 0;
+  const decryptCount = parseInt(file.decrypt_count, 10) || 0;
+  const isMaxedOut = maxCount > 0 && decryptCount >= maxCount;
+
+  // Status badge
+  let statusBadge = "";
+  let cardClass = "";
+  
+  if (isRevoked) {
+    statusBadge = '<span class="status-badge revoked">🚫 Revoked</span>';
+    cardClass = "revoked";
+  } else if (isExpired) {
+    statusBadge = '<span class="status-badge expired">⏰ Expired</span>';
+    cardClass = "expired";
+  } else if (isMaxedOut) {
+    statusBadge = '<span class="status-badge maxed">📊 Max Downloads</span>';
+    cardClass = "maxed";
+  } else {
+    statusBadge = '<span class="status-badge active">✓ Active</span>';
+    cardClass = "active";
+  }
+
+  // Encryption badge
+  let encryptionBadge = "";
+  if (file.encryption_rating) {
+    const rating = file.encryption_rating;
+    const score = file.encryption_score || 0;
+    let emoji = "🔒";
+    let ratingClass = "good";
+
+    if (rating === "Excellent" || rating === "Superior") {
+      emoji = "🛡️";
+      ratingClass = "excellent";
+    } else if (rating === "Good") {
+      emoji = "🔐";
+      ratingClass = "good";
+    } else {
+      emoji = "🔓";
+      ratingClass = "fair";
+    }
+
+    encryptionBadge = `
+      <button 
+        type="button"
+        class="encryption-badge ${ratingClass}"
+        data-action="show-encryption-report"
+        data-file-id="${escapeHtml(file.file_id)}"
+        title="Click for encryption report"
+      >
+        ${emoji} ${escapeHtml(rating)} (${Math.round(score)})
+      </button>
+    `;
+  }
+
+  // Action buttons - different for revoked vs active files
+  let actionButtons = "";
+  if (isRevoked) {
+    actionButtons = `
+      <button
+        type="button"
+        class="btn btn-success btn-sm"
+        data-action="confirm-reactivate"
+        data-file-id="${escapeHtml(file.file_id)}"
+        title="Restore access to all recipients"
+      >
+        ♻️ Reactivate
+      </button>
+      <button
+        type="button"
+        class="btn btn-danger btn-sm"
+        data-action="confirm-delete"
+        data-file-id="${escapeHtml(file.file_id)}"
+        title="Permanently delete this file"
+      >
+        🗑️ Delete
+      </button>
+    `;
+  } else {
+    actionButtons = `
+      <button
+        type="button"
+        class="btn btn-primary btn-sm"
+        data-action="show-edit-policy"
+        data-file-id="${escapeHtml(file.file_id)}"
+        title="Edit expiry and download limits"
+      >
+        ⚙️ Edit Policy
+      </button>
+      <button
+        type="button"
+        class="btn btn-warning btn-sm"
+        data-action="confirm-revoke"
+        data-file-id="${escapeHtml(file.file_id)}"
+        title="Revoke access for all recipients"
+      >
+        🔐 Revoke Access
+      </button>
+      <button
+        type="button"
+        class="btn btn-danger btn-sm"
+        data-action="confirm-delete"
+        data-file-id="${escapeHtml(file.file_id)}"
+        title="Permanently delete this file"
+      >
+        🗑️ Delete
+      </button>
+    `;
+  }
 
   return `
-    <div class="shared-file-card ${statusClass}" data-file-id="${escapeHtml(String(file.file_id))}">
+    <div class="file-card ${cardClass}" data-file-id="${escapeHtml(file.file_id)}">
       <div class="file-header">
+        <div class="file-icon">${getFileIcon(file.mime_type)}</div>
         <div class="file-info">
-          <div class="file-icon-large">${fileIcon}</div>
-          <div class="file-details">
-            <h3 class="file-name">${escapeHtml(file.file_name)}</h3>
-            <div class="file-meta">
-              <span class="meta-item">📊 ${formatFileSize(file.file_size || 0)}</span>
-              <span class="meta-item">📅 ${formatDate(file.uploaded_at)}</span>
-              <span class="meta-item">⏰ Expires: ${formatExpiryDate(file.expiry_time)}</span>
-              ${
-                file.encryption_score
-                  ? `
-                <span
-                  class="meta-item encryption-score"
-                  role="button"
-                  tabindex="0"
-                  data-action="show-encryption-report"
-                  data-file-id="${escapeHtml(String(file.file_id))}"
-                  style="cursor: pointer;"
-                >
-                  🔒 ${escapeHtml(String(file.encryption_score))}% ${escapeHtml(String(file.encryption_rating || ""))}
-                </span>
-              `
-                  : ""
-              }
-            </div>
-            ${isExpired ? '<span class="status-badge expired">⏰ Expired</span>' : ""}
-            ${isRevoked ? '<span class="status-badge revoked">🚫 Revoked</span>' : ""}
-            ${!isExpired && !isRevoked ? '<span class="status-badge active">✅ Active</span>' : ""}
+          <h3 class="file-name">${escapeHtml(file.file_name)}</h3>
+          <div class="file-meta">
+            <span>${formatFileSize(file.file_size)}</span>
+            <span>•</span>
+            <span>Uploaded ${formatDate(file.uploaded_at)}</span>
           </div>
         </div>
-        <div class="file-actions">
-          ${
-            !isRevoked && !isExpired
-              ? `
-            <button class="action-btn btn-edit" type="button"
-              data-action="show-edit-policy"
-              data-file-id="${escapeHtml(String(file.file_id))}">
-              ✏️ Edit Policy
-            </button>
-          `
-              : ""
-          }
-          ${
-            !isRevoked
-              ? `
-            <button class="action-btn btn-revoke" type="button"
-              data-action="confirm-revoke"
-              data-file-id="${escapeHtml(String(file.file_id))}">
-              🚫 Revoke Access
-            </button>
-          `
-              : ""
-          }
-          <button class="action-btn btn-delete" type="button"
-            data-action="confirm-delete"
-            data-file-id="${escapeHtml(String(file.file_id))}">
-            🗑️ Delete
-          </button>
+        <div class="file-badges">
+          ${statusBadge}
+          ${encryptionBadge}
         </div>
       </div>
 
       <div class="file-stats">
-        <div class="stat-item">
-          <div class="stat-label">Recipients</div>
-          <div class="stat-value">${file.recipient_count || 0}</div>
+        <div class="stat">
+          <span class="stat-label">Recipients</span>
+          <span class="stat-value">${file.recipient_count || 0}</span>
         </div>
-        <div class="stat-item">
-          <div class="stat-label">Downloads</div>
-          <div class="stat-value">${file.decrypt_count || 0}/${file.max_decrypt_count || "∞"}</div>
+        <div class="stat">
+          <span class="stat-label">Downloads</span>
+          <span class="stat-value">${decryptCount} / ${maxCount || "∞"}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Expires</span>
+          <span class="stat-value">${formatExpiryDate(file.expiry_time)}</span>
         </div>
       </div>
 
-      <div class="recipients-section">
-        <div class="recipients-header">
-          <div class="recipients-title">
-            👥 Recipients
-            <span class="recipient-count">${file.recipient_count || 0}</span>
-          </div>
-        </div>
-        <div class="recipients-list" id="recipients-${escapeHtml(String(file.file_id))}">
-          <div class="loading-text">Loading recipients...</div>
-        </div>
+      <div class="recipients-container" id="recipients-${escapeHtml(file.file_id)}">
+        <div class="recipients-loading">Loading recipients...</div>
+      </div>
+
+      <div class="file-actions">
+        ${actionButtons}
       </div>
     </div>
   `;
 }
 
-async function loadFileRecipients(fileId) {
-  try {
-    const file = sharedFiles.find((f) => f.file_id === fileId);
-    if (file && file.recipients) {
-      displayRecipients(fileId, file.recipients);
-    }
-  } catch (error) {
-    console.error("Error loading recipients:", error);
-    const recipientsContainer = document.getElementById(`recipients-${fileId}`);
-    if (recipientsContainer) {
-      recipientsContainer.innerHTML = '<div class="error-text">Failed to load recipients</div>';
-    }
-  }
-}
-
-function displayRecipients(fileId, recipients) {
+async function loadRecipients(fileId) {
   const container = document.getElementById(`recipients-${fileId}`);
   if (!container) return;
 
-  if (!recipients || recipients.length === 0) {
-    container.innerHTML = '<div class="empty-text">No recipients yet</div>';
+  const file = sharedFiles.find((f) => f.file_id === fileId);
+  if (!file || !file.recipients || file.recipients.length === 0) {
+    container.innerHTML = '<p class="no-recipients">No recipients</p>';
     return;
   }
 
-  container.innerHTML = recipients
+  const isRevoked = file.status === "revoked";
+
+  const recipientsHtml = file.recipients
     .map((recipient) => {
-      const email = recipient.email || "";
-      const username = recipient.username || "";
-      const name = recipient.name || "";
+      const removeButton = isRevoked ? '' : `
+        <button
+          type="button"
+          class="recipient-remove"
+          data-action="show-remove-recipient"
+          data-file-id="${escapeHtml(fileId)}"
+          data-recipient-email="${escapeHtml(recipient.email)}"
+          data-recipient-username="${escapeHtml(recipient.username || '')}"
+          title="Remove this recipient"
+        >
+          ×
+        </button>
+      `;
 
       return `
-      <div class="recipient-item">
-        <div class="recipient-info">
-          <div class="recipient-avatar">${escapeHtml(getInitials(name))}</div>
-          <div class="recipient-details">
-            <div class="recipient-email">${escapeHtml(email)}</div>
-            <div class="recipient-meta">
-              ${escapeHtml(name)} (@${escapeHtml(username)})
-            </div>
+        <div class="recipient-item">
+          <div class="recipient-avatar">${getInitials(recipient.name || recipient.username)}</div>
+          <div class="recipient-info">
+            <div class="recipient-name">${escapeHtml(recipient.name || recipient.username)}</div>
+            <div class="recipient-email">${escapeHtml(recipient.email)}</div>
           </div>
+          ${removeButton}
         </div>
-        <div class="recipient-actions">
-          <button class="recipient-btn btn-remove" type="button"
-            data-action="show-remove-recipient"
-            data-file-id="${escapeHtml(String(fileId))}"
-            data-recipient-email="${escapeHtml(email)}"
-            data-recipient-username="${escapeHtml(username)}">
-            ❌ Remove
-          </button>
-        </div>
-      </div>
-    `;
+      `;
     })
     .join("");
+
+  container.innerHTML = `
+    <div class="recipients-header">
+      <span class="recipients-title">Recipients (${file.recipients.length})</span>
+    </div>
+    <div class="recipients-list">
+      ${recipientsHtml}
+    </div>
+  `;
 }
 
-// Modal Functions
 function showEditPolicyModal(fileId) {
-  currentFileId = fileId;
   const file = sharedFiles.find((f) => f.file_id === fileId);
-
   if (!file) return;
 
-  document.getElementById("edit-file-name-display").textContent = file.file_name;
+  currentFileId = fileId;
 
-  // Convert expiry_time to datetime-local format
-  const expiryDate = new Date(file.expiry_time);
-  const year = expiryDate.getFullYear();
-  const month = String(expiryDate.getMonth() + 1).padStart(2, "0");
-  const day = String(expiryDate.getDate()).padStart(2, "0");
-  const hours = String(expiryDate.getHours()).padStart(2, "0");
-  const minutes = String(expiryDate.getMinutes()).padStart(2, "0");
-  const datetimeLocal = `${year}-${month}-${day}T${hours}:${minutes}`;
+  // Pre-fill current values
+  const expiryInput = document.getElementById("edit-expiry-time");
+  const maxDownloadsInput = document.getElementById("edit-max-downloads");
 
-  document.getElementById("edit-expiry-time").value = datetimeLocal;
-  document.getElementById("edit-max-downloads").value = file.max_decrypt_count || "";
+  if (expiryInput && file.expiry_time) {
+    const expiryDate = new Date(file.expiry_time);
+    const localDateTime = new Date(expiryDate.getTime() - expiryDate.getTimezoneOffset() * 60000)
+      .toISOString()
+      .slice(0, 16);
+    expiryInput.value = localDateTime;
+  }
+
+  if (maxDownloadsInput) {
+    maxDownloadsInput.value = file.max_decrypt_count || 10;
+  }
+
+  const titleEl = document.getElementById("edit-policy-title");
+  if (titleEl) {
+    titleEl.textContent = `Edit Policy: ${file.file_name}`;
+  }
 
   showModal("edit-policy-modal");
 }
 
-function showRemoveRecipientModal(fileId, email, username) {
+function showRemoveRecipientModal(fileId, recipientEmail, recipientUsername) {
   currentFileId = fileId;
-  document.getElementById("remove-recipient-email").textContent = email;
-  currentRecipientId = email;
+  currentRecipientId = recipientEmail;
+
+  const messageEl = document.getElementById("remove-recipient-message");
+  if (messageEl) {
+    const displayName = recipientUsername || recipientEmail;
+    messageEl.textContent = `Are you sure you want to remove ${displayName} from this file? They will no longer be able to access it.`;
+  }
+
   showModal("remove-recipient-modal");
 }
 
 function confirmDeleteFile(fileId) {
-  currentFileId = fileId;
-  const file = sharedFiles.find((f) => f.file_id === fileId);
-  if (file) {
-    document.getElementById("delete-file-name").textContent = file.file_name;
-  }
-  showModal("delete-file-modal");
-}
-
-async function showEncryptionReport(fileId) {
   const file = sharedFiles.find((f) => f.file_id === fileId);
   if (!file) return;
 
-  const reportContent = document.getElementById("encryption-report-content");
-  reportContent.innerHTML = `
-    <div class="report-section">
-      <div class="report-header">
-        <div class="report-icon">📊</div>
-        <div>
-          <h3 class="report-title">${escapeHtml(file.file_name)}</h3>
-          <p class="report-subtitle">Encryption Analysis Report</p>
+  currentFileId = fileId;
+
+  const messageEl = document.getElementById("delete-file-message");
+  if (messageEl) {
+    messageEl.textContent = `Are you sure you want to permanently delete "${file.file_name}"? This action cannot be undone and will remove the file for all ${file.recipient_count} recipient(s).`;
+  }
+
+  showModal("delete-file-modal");
+}
+
+function showEncryptionReport(fileId) {
+  const file = sharedFiles.find((f) => f.file_id === fileId);
+  if (!file || !file.encryption_metrics_json) {
+    showFeedback("error", "No encryption metrics available for this file");
+    return;
+  }
+
+  let metrics;
+  try {
+    metrics = JSON.parse(file.encryption_metrics_json);
+  } catch (e) {
+    showFeedback("error", "Failed to parse encryption metrics");
+    return;
+  }
+
+  const titleEl = document.getElementById("encryption-report-title");
+  const contentEl = document.getElementById("encryption-report-content");
+
+  if (titleEl) {
+    titleEl.textContent = `Encryption Report: ${file.file_name}`;
+  }
+
+  if (contentEl) {
+    contentEl.innerHTML = `
+      <div class="encryption-summary">
+        <div class="encryption-score-large">
+          <div class="score-value">${Math.round(file.encryption_score || 0)}</div>
+          <div class="score-label">${file.encryption_rating || "N/A"}</div>
+        </div>
+        <div class="encryption-meta">
+          <p><strong>Encryption Time:</strong> ${file.encryption_time_ms || 0}ms</p>
+          <p><strong>Size Overhead:</strong> ${file.size_overhead_percent || 0}%</p>
         </div>
       </div>
-    </div>
-
-    <div class="report-section">
-      <div class="score-display">
-        <div class="score-circle ${file.encryption_rating ? escapeHtml(file.encryption_rating.toLowerCase()) : "unknown"}">
-          <div class="score-number">${file.encryption_score || "N/A"}%</div>
-          <div class="score-label">${escapeHtml(file.encryption_rating || "Unknown")}</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="report-section">
-      <h4 class="section-title">🔍 Encryption Details</h4>
-      <div class="detail-grid">
-        <div class="detail-item">
-          <span class="detail-label">Algorithm:</span>
-          <span class="detail-value">AES-256-GCM</span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label">Key Length:</span>
-          <span class="detail-value">256 bits</span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label">Mode:</span>
-          <span class="detail-value">Galois/Counter Mode</span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label">Status:</span>
-          <span class="detail-value status-${escapeHtml(String(file.status || ""))}">
-            ${escapeHtml(String(file.status || "")).toUpperCase()}
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <div class="report-section">
-      <h4 class="section-title">🛡️ Security Features</h4>
-      <div class="feature-list">
-        <div class="feature-item">
-          <span class="feature-icon">✅</span>
-          <div class="feature-text">
-            <strong>End-to-End Encryption</strong>
-            <p>File encrypted before upload</p>
-          </div>
-        </div>
-        <div class="feature-item">
-          <span class="feature-icon">✅</span>
-          <div class="feature-text">
-            <strong>Authentication Tags</strong>
-            <p>Integrity verification enabled</p>
-          </div>
-        </div>
-        <div class="feature-item">
-          <span class="feature-icon">✅</span>
-          <div class="feature-text">
-            <strong>Secure Key Exchange</strong>
-            <p>RSA-2048 key encryption</p>
-          </div>
-        </div>
-        <div class="feature-item">
-          <span class="feature-icon">✅</span>
-          <div class="feature-text">
-            <strong>Download Limits</strong>
-            <p>${file.decrypt_count || 0}/${file.max_decrypt_count || "∞"} downloads used</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="report-section">
-      <h4 class="section-title">📈 Risk Assessment</h4>
-      <div class="risk-items">
-        <div class="risk-item low">
-          <span class="risk-icon">🟢</span>
-          <span class="risk-text">Low: Encryption algorithm is industry standard</span>
-        </div>
-        <div class="risk-item low">
-          <span class="risk-icon">🟢</span>
-          <span class="risk-text">Low: Key management follows best practices</span>
-        </div>
-        ${
-          file.expiry_time && new Date(file.expiry_time) < new Date()
-            ? `
-          <div class="risk-item high">
-            <span class="risk-icon">🔴</span>
-            <span class="risk-text">High: File has expired - consider deletion</span>
+      <div class="encryption-breakdown">
+        <h4>Breakdown</h4>
+        ${Object.entries(metrics)
+          .map(
+            ([key, value]) => `
+          <div class="breakdown-item">
+            <span class="breakdown-label">${escapeHtml(key)}:</span>
+            <span class="breakdown-value">${escapeHtml(String(value))}</span>
           </div>
         `
-            : ""
-        }
+          )
+          .join("")}
       </div>
-    </div>
-  `;
+    `;
+  }
 
   showModal("encryption-report-modal");
 }
@@ -665,7 +686,7 @@ async function handleDeleteFile() {
 async function confirmRevokeShare(fileId) {
   if (
     !confirm(
-      '⚠️ REVOKE ACCESS - This will:\n\n• Prevent ALL recipients from downloading this file\n• Mark the file as "Revoked" (no deletions)\n• Keep the file in your system\n\nAre you sure?'
+      '⚠️ REVOKE ACCESS - This will:\n\n• Prevent ALL recipients from downloading this file\n• Mark the file as "Revoked"\n• Keep the file in your system (can be reactivated later)\n\nAre you sure?'
     )
   ) {
     return;
@@ -689,6 +710,36 @@ async function confirmRevokeShare(fileId) {
   } catch (error) {
     console.error("Error revoking share:", error);
     showFeedback("error", "Failed to revoke access");
+  }
+}
+
+async function confirmReactivateShare(fileId) {
+  if (
+    !confirm(
+      '✅ REACTIVATE FILE - This will:\n\n• Restore access for ALL recipients\n• Change status from "Revoked" to "Active"\n• Notify recipients that the file is available again\n\nAre you sure?'
+    )
+  ) {
+    return;
+  }
+
+  try {
+    const response = await fetch("api/shared_files.php?action=reactivate_share", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ file_id: fileId }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      showFeedback("success", data.message);
+      loadSharedFiles();
+    } else {
+      showFeedback("error", data.message);
+    }
+  } catch (error) {
+    console.error("Error reactivating share:", error);
+    showFeedback("error", "Failed to reactivate file");
   }
 }
 

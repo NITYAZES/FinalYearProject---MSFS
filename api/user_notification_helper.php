@@ -11,16 +11,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/activity_logger.php';
 
-/* =========================================================
-   Time formatting helpers (days/hours/minutes)
-   ========================================================= */
 
-/**
- * Return a friendly time remaining string.
- * - < 60 minutes => "X minutes"
- * - < 48 hours   => "X hours"
- * - otherwise    => "X days"
- */
 function formatTimeRemaining(int $seconds): string
 {
     if ($seconds <= 0) {
@@ -307,6 +298,26 @@ function notifyFileRevoked(PDO $pdo, int $senderId, array $receiverIds, string $
         error_log("🔒 File revocation notifications sent for: {$fileId}");
     } catch (Throwable $e) {
         error_log('Failed to create revocation notifications: ' . $e->getMessage());
+    }
+}
+
+/**
+ * Notify when file access is reactivated
+ */
+function notifyFileReactivated(PDO $pdo, int $senderId, array $receiverIds, string $fileId, string $fileName): void
+{
+    try {
+        $timestamp = time();
+
+        foreach ($receiverIds as $receiverId) {
+            createUserNotification($pdo, (int)$receiverId, 'file_reactivated_' . $fileId . '_' . $timestamp, 'file_reactivated', 'normal');
+        }
+
+        createUserNotification($pdo, $senderId, 'reactivate_confirm_' . $fileId . '_' . $timestamp, 'file_reactivated_success', 'low');
+
+        error_log("♻️ File reactivation notifications sent for: {$fileId}");
+    } catch (Throwable $e) {
+        error_log('Failed to create reactivation notifications: ' . $e->getMessage());
     }
 }
 
