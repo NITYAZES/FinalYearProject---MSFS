@@ -13,8 +13,8 @@ $mail->Host = 'smtp.ethereal.email';
 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 $mail->Port = 587;
 
-$mail->Username = 'davin.lang12@ethereal.email';
-$mail->Password = 'RSZa77NRnbx3yMFCzX';
+$mail->Username = 'your_ethereal_username';
+$mail->Password = 'your_ethereal_password';
 
 $mail->isHTML(true);
 $mail->CharSet = 'UTF-8';
